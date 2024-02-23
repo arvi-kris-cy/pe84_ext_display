@@ -32,19 +32,71 @@
 
 
 // 根据前端MIPI输入信号的Timing修改以下宏定义的值:
-#define MIPI_H_Active	800
+// #define MIPI_H_Active	800
+// #define MIPI_V_Active	600
+
+// #define MIPI_H_Total	1056
+// #define MIPI_V_Total	628
+
+// #define MIPI_H_FrontPorch	40
+// #define MIPI_H_SyncWidth	128
+// #define MIPI_H_BackPorch	88
+
+// #define MIPI_V_FrontPorch	1
+// #define MIPI_V_SyncWidth	4
+// #define MIPI_V_BackPorch	23
+
+/* 1024x600 panel
+#define Panel_Pixel_CLK 5125 // 51.25MHZ
+
+#define Panel_H_Active	1024
+#define Panel_V_Active	600
+
+#define Panel_H_Total	1344
+#define Panel_V_Total	635
+
+#define Panel_H_FrontPorch	160
+#define Panel_H_SyncWidth	20
+#define Panel_H_BackPorch	140
+
+#define Panel_V_FrontPorch	12
+#define Panel_V_SyncWidth	3
+#define Panel_V_BackPorch	20
+*/
+
+/* 1024x768 panel
+#define Panel_Pixel_CLK 6500    // 65MHz
+
+#define Panel_H_Active	1024
+#define Panel_V_Active	768
+
+#define Panel_H_Total	1344
+#define Panel_V_Total	806
+
+#define Panel_H_FrontPorch	24
+#define Panel_H_SyncWidth	136
+#define Panel_H_BackPorch	160
+
+#define Panel_V_FrontPorch	3
+#define Panel_V_SyncWidth	6
+#define Panel_V_BackPorch	29
+*/
+
+#define Panel_Pixel_CLK 5125 // 51.25MHZ
+
+#define MIPI_H_Active	1024
 #define MIPI_V_Active	600
 
-#define MIPI_H_Total	1056
-#define MIPI_V_Total	628
+#define MIPI_H_Total	1344
+#define MIPI_V_Total	635
 
-#define MIPI_H_FrontPorch	40
-#define MIPI_H_SyncWidth	128
-#define MIPI_H_BackPorch	88
+#define MIPI_H_FrontPorch	160
+#define MIPI_H_SyncWidth	20
+#define MIPI_H_BackPorch	140
 
-#define MIPI_V_FrontPorch	1
-#define MIPI_V_SyncWidth	4
-#define MIPI_V_BackPorch	23
+#define MIPI_V_FrontPorch	12
+#define MIPI_V_SyncWidth	3
+#define MIPI_V_BackPorch	20
 
 // #define MIPI_H_Active	1024
 // #define MIPI_V_Active	768

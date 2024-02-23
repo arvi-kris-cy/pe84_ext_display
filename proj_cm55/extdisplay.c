@@ -29,16 +29,18 @@
 /* I2C slave address */
 #define I2C_ADDR_MAIN 0x48
 #define I2C_ADDR_CEC_DSI 0x49
+#define I2C_ADDR_AUDIO 0x4A
 
 typedef enum
 {
 	I2C_MAIN,
 	I2C_CEC_DSI,
+	I2C_AUDIO
 	I2C_MAX_IDX
 }i2c_addr_idx_e;
 
 /* I2C Regmap */
-uint32_t regmap[2] = {I2C_ADDR_MAIN, I2C_ADDR_CEC_DSI};
+uint32_t regmap[3] = {I2C_ADDR_MAIN, I2C_ADDR_CEC_DSI, I2C_ADDR_AUDIO};
 
 /*******************************************************************************
 * Global Variables
@@ -90,7 +92,7 @@ void handle_error(uint32_t status)
     }
 }
 
-int lt8912_write_lvds_config(void)
+int linuxrepo_lt8912_write_lvds_config(void)
 {
 	int ret;
 	// lvds power up
@@ -122,25 +124,33 @@ int lt8912_write_lvds_config(void)
 	return ret;
 }
 
-int lt8912_write_rxlogicres_config(void)
+int linuxrepo_lt8912_write_rxlogicres_config(void)
 {
 	int ret;
+	// ret = HDMI_Write(regmap[I2C_MAIN], 0xb2, 0x01); //hdmi_setting); // TODO check sequence // 0x01:HDMI; 0x00: DVI
 
-	ret = HDMI_Write(regmap[I2C_MAIN], 0x03, 0x7f);
-	Cy_SysLib_Delay(15);
+	// MIPI reset
+	ret |= HDMI_Write(regmap[I2C_MAIN], 0x03, 0x7f);
+	Cy_SysLib_Delay(10);
 	ret |= HDMI_Write(regmap[I2C_MAIN], 0x03, 0xff);
+
+	// DDS reset
+	ret |= HDMI_Write(regmap[I2C_MAIN], 0x05, 0xfb);
+	Cy_SysLib_Delay(10);
+	ret |= HDMI_Write(regmap[I2C_MAIN], 0x05, 0xff);
 
 	return ret;
 }
 
-int lt8912_write_dds_config(void)
+int linuxrepo_lt8912_write_dds_config(void)
 {
 	int ret;
 
-	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x4e, 0xff);
-	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x4f, 0x56);
-	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x50, 0x69);
+	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x4e, 0x52); //0xff); // in test_1280x720: value = 0x33, others = 0x52
+	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x4f, 0xde); //0x56);
+	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x50, 0xc0); //0x69);
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x51, 0x80);
+	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x1e, 0x4f);
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x1f, 0x5e);
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x20, 0x01);
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x21, 0x2c);
@@ -149,6 +159,7 @@ int lt8912_write_dds_config(void)
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x24, 0x00);
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x25, 0xc8);
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x26, 0x00);
+
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x27, 0x5e);
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x28, 0x01);
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x29, 0x2c);
@@ -157,6 +168,7 @@ int lt8912_write_dds_config(void)
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x2c, 0x00);
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x2d, 0xc8);
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x2e, 0x00);
+
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x42, 0x64);
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x43, 0x00);
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x44, 0x04);
@@ -180,13 +192,73 @@ int lt8912_write_dds_config(void)
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x5a, 0x8a);
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x5b, 0x00);
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x5c, 0x34);
-	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x1e, 0x4f);
+	
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x51, 0x00);
 
 	return ret;
 }
 
-int lt8912_video_setup(void)
+int linuxrepo_lt8912_audio_config(void)
+{
+	uint8_t	AVI_PB0	   = 0x00;
+	uint8_t AVI_PB1	   = 0x00;
+	uint8_t AVI_PB2	   = 0x00;
+	uint8_t HDMI_VIC   = 0x00;
+
+
+	int ret;
+	ret = HDMI_Write(regmap[I2C_MAIN], 0xb2, 0x01);
+
+	ret |= HDMI_Write(regmap[I2C_AUDIO], 0x06, 0x08);
+	ret |= HDMI_Write(regmap[I2C_AUDIO], 0x07, 0x00); // enable Audio: 0xF0;  Audio Mute: 0x00
+	ret |= HDMI_Write(regmap[I2C_AUDIO], 0x09, 0x00); // 0x00:Left justified; default
+
+	//TODO - needed?
+// 	ret |= HDMI_Write(regmap[I2C_AUDIO], 0x0f, 0x0b + Sample_Freq[_48KHz] );
+
+// 	ret |= HDMI_Write(regmap[I2C_AUDIO], 0x37, (u8)( IIS_N[_48KHz] / 0x10000 ) );
+// 	ret |= HDMI_Write(regmap[I2C_AUDIO], 0x36, (u8)( ( IIS_N[_48KHz] & 0x00FFFF ) / 0x100 ) );
+// 	ret |= HDMI_Write(regmap[I2C_AUDIO], 0x35, (u8)( IIS_N[_48KHz] & 0x0000FF ) );
+
+// 	ret |= HDMI_Write(regmap[I2C_AUDIO], 0x34, 0xD2 );   // 32 bit的数据长度
+// //	ret |= HDMI_Write(regmap[I2C_AUDIO], 0x34, 0xE2 ); // 16 bit的数据长度
+
+// 	ret |= HDMI_Write(regmap[I2C_AUDIO], 0x3c, 0x41 );   // Null packet enable
+	return ret;
+}
+
+int linuxrepo_lt8912_avi_config(void)
+{
+	int ret;
+	ret = HDMI_Write(regmap[I2C_AUDIO], 0x3e, 0x0a);
+
+	HDMI_VIC = 0x04; // 720P 60; Corresponding to the resolution to be output //TODO test and change
+	// HDMI_VIC = 0x10;                        // 1080P 60
+	// HDMI_VIC = 0x1F; // 1080P 50
+	// HDMI_VIC = 0x00; // If the resolution is non-standard, set to 0x00
+
+	AVI_PB1 = 0x10;                         // PB1, color space: YUV444 0x70; YUV422 0x30; RGB 0x10
+	AVI_PB2 = 0x2A;                         // PB2; picture aspect rate: 0x19:4:3 ;     0x2A : 16:9
+
+
+	/********************************************************************************
+	   The 0x43 register is checksums,
+	   changing the value of the 0x45 or 0x47 register,
+	   and the value of the 0x43 register is also changed.
+	   0x43, 0x44, 0x45, and 0x47 are the sum of the four register values is 0x6F.
+	 *********************************************************************************/
+	AVI_PB0 = ( ( AVI_PB1 + AVI_PB2 + HDMI_VIC ) <= 0x6f ) ? ( 0x6f - AVI_PB1 - AVI_PB2 - HDMI_VIC ) : ( 0x16f - AVI_PB1 - AVI_PB2 - HDMI_VIC );
+
+
+	ret |= HDMI_Write(regmap[I2C_AUDIO], 0x43, AVI_PB0);
+	ret |= HDMI_Write(regmap[I2C_AUDIO], 0x44, AVI_PB1);
+	ret |= HDMI_Write(regmap[I2C_AUDIO], 0x45, AVI_PB2);
+	ret |= HDMI_Write(regmap[I2C_AUDIO], 0x47, HDMI_VIC);
+	
+	return ret;
+}
+
+int linuxrepo_lt8912_video_setup(void)
 {
 	uint32_t hactive, h_total, hpw, hfp, hbp;
 	uint32_t vactive, v_total, vpw, vfp, vbp;
@@ -213,63 +285,70 @@ int lt8912_video_setup(void)
 		settle = 0x0a;
 
 	ret = HDMI_Write(regmap[I2C_CEC_DSI], 0x10, 0x01);
-	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x11, settle);
-	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x18, hpw);
-	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x19, vpw);
-	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x1c, hactive & 0xff);
-	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x1d, hactive >> 8);
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x11, settle); //TODO check 0x08
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x18, (MIPI_H_SyncWidth % 256)); //hpw);
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x19, (MIPI_V_SyncWidth % 256)); //vpw);
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x1c, (MIPI_H_Active % 256 )); //hactive & 0xff);
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x1d, (MIPI_H_Active / 256)); //hactive >> 8);
+
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x1e, 0x67 ); //TODO check added
 
 	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x2f, 0x0c);
 
-	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x34, h_total & 0xff);
-	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x35, h_total >> 8);
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x34, (MIPI_H_Total % 256)); //h_total & 0xff);
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x35, (MIPI_H_Total / 256)); //h_total >> 8);
 
-	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x36, v_total & 0xff);
-	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x37, v_total >> 8);
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x36, (MIPI_V_Total % 256)); //v_total & 0xff);
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x37, (MIPI_V_Total / 256)); //v_total >> 8);
 
-	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x38, vbp & 0xff);
-	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x39, vbp >> 8);
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x38, (MIPI_V_BackPorch % 256)); //vbp & 0xff);
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x39, (MIPI_V_BackPorch / 256)); //vbp >> 8);
 
-	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x3a, vfp & 0xff);
-	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x3b, vfp >> 8);
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x3a, (MIPI_V_FrontPorch % 256)); //vfp & 0xff);
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x3b, (MIPI_V_FrontPorch / 256)); //vfp >> 8);
 
-	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x3c, hbp & 0xff);
-	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x3d, hbp >> 8);
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x3c, (MIPI_H_BackPorch % 256)); //hbp & 0xff);
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x3d, (MIPI_H_BackPorch / 256)); //hbp >> 8);
 
-	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x3e, hfp & 0xff);
-	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x3f, hfp >> 8);
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x3e, (MIPI_H_FrontPorch % 256)); //hfp & 0xff);
+	ret |= HDMI_Write(regmap[I2C_CEC_DSI], 0x3f, (MIPI_H_FrontPorch / 256)); //hfp >> 8);
 
-    HDMI_Read(regmap[I2C_MAIN], 0xab, vsync_setting);
+    // HDMI_Read(regmap[I2C_MAIN], 0xab, vsync_setting); // TODO check not used in others
 
     vsync_setting |= (vsync_activehigh ? BIT(0) : 0);
     vsync_setting |= (hsync_activehigh ? BIT(1) : 0);
 
-    ret |= HDMI_Write(regmap[I2C_MAIN], 0xab, vsync_setting);
-    HDMI_Read(regmap[I2C_MAIN], 0xb2, hdmi_setting);
+    // ret |= HDMI_Write(regmap[I2C_MAIN], 0xab, vsync_setting);
+    // HDMI_Read(regmap[I2C_MAIN], 0xb2, hdmi_setting);
 
     hdmi_setting |= BIT(0);
-    ret |= HDMI_Write(regmap[I2C_MAIN], 0xb2, hdmi_setting);
+	//TODO - force/replace BIT(0) = 1? reg 0xb2 value needs to be 0x01 
+    // ret |= HDMI_Write(regmap[I2C_MAIN], 0xb2, hdmi_setting);
 
 	return ret;
 }
 
-int lt8912_video_on(void)
+int linuxrepo_lt8912_video_on(void)
 {
 	int ret;
 
-	ret = lt8912_video_setup();
+	ret = linuxrepo_lt8912_video_setup();
 	if (ret < 0)
 		goto end;
 
-	ret = lt8912_write_dds_config();
+	ret = linuxrepo_lt8912_write_dds_config();
 	if (ret < 0)
 		goto end;
 
-	ret = lt8912_write_rxlogicres_config();
+	ret = linuxrepo_lt8912_audio_config();
 	if (ret < 0)
 		goto end;
 
-	// ret = lt8912_write_lvds_config();
+	ret = linuxrepo_lt8912_write_rxlogicres_config();
+	if (ret < 0)
+		goto end;
+
+	// ret = linuxrepo_lt8912_write_lvds_config();
 	// if (ret < 0)
 	// 	goto end;
 
@@ -277,60 +356,61 @@ end:
 	return ret;
 }
 
-void lt8912_write_mipi_basic_config()
+void linuxrepo_lt8912_write_mipi_basic_config()
 {
 	HDMI_Write(regmap[I2C_CEC_DSI], 0x12, 0x04);
 	HDMI_Write(regmap[I2C_CEC_DSI], 0x14, 0x00);
-	HDMI_Write(regmap[I2C_CEC_DSI], 0x15, 0x00);
+	HDMI_Write(regmap[I2C_CEC_DSI], 0x15, 0x00); //MIPI_Lane_CH_Swap );  // 00: 0123 normal ; a8 : 3210 swap
 	HDMI_Write(regmap[I2C_CEC_DSI], 0x1a, 0x03);
 	HDMI_Write(regmap[I2C_CEC_DSI], 0x1b, 0x03);
 }
 
-void lt8912_write_init_config(void)
+void linuxrepo_lt8912_write_init_config(void)
 {
-	/* Digital clock en*/
+	/* Digital clock en*/ //LVDS specific?
 	HDMI_Write(regmap[I2C_MAIN], 0x08, 0xff);
 	HDMI_Write(regmap[I2C_MAIN], 0x09, 0xff);
 	HDMI_Write(regmap[I2C_MAIN], 0x0a, 0xff);
 	HDMI_Write(regmap[I2C_MAIN], 0x0b, 0x7c);
 	HDMI_Write(regmap[I2C_MAIN], 0x0c, 0xff);
-	HDMI_Write(regmap[I2C_MAIN], 0x42, 0x04);
+
+	HDMI_Write(regmap[I2C_MAIN], 0x42, 0x04); // not written in test_1280x720
 
 	/*Tx Analog*/
-	HDMI_Write(regmap[I2C_MAIN], 0x31, 0xb1);
-	HDMI_Write(regmap[I2C_MAIN], 0x32, 0xb1);
-	HDMI_Write(regmap[I2C_MAIN], 0x33, 0x0e);
-	HDMI_Write(regmap[I2C_MAIN], 0x37, 0x00);
-	HDMI_Write(regmap[I2C_MAIN], 0x38, 0x22);
+	HDMI_Write(regmap[I2C_MAIN], 0x31, 0xb1); // in test_1280x720: value = 0xa1
+	HDMI_Write(regmap[I2C_MAIN], 0x32, 0xb1); // in test_1280x720: value = 0xa1
+	HDMI_Write(regmap[I2C_MAIN], 0x33, 0x0e); // in test_1280x720: value = 0x03. //TODO try 0x03 or 0x17 (// bit0/bit1 =1 Turn On HDMI Tx)
+	HDMI_Write(regmap[I2C_MAIN], 0x37, 0x00); 
+	HDMI_Write(regmap[I2C_MAIN], 0x38, 0x22); 
 	HDMI_Write(regmap[I2C_MAIN], 0x60, 0x82);
 
 	/*Cbus Analog*/
 	HDMI_Write(regmap[I2C_MAIN], 0x39, 0x45);
-	HDMI_Write(regmap[I2C_MAIN], 0x3a, 0x00);
+	HDMI_Write(regmap[I2C_MAIN], 0x3a, 0x00); // not written in test_1280x720 //TODO keep
 	HDMI_Write(regmap[I2C_MAIN], 0x3b, 0x00);
 
-	/*HDMI Pll Analog*/
+	/*HDMI Pll Analog*/ 
 	HDMI_Write(regmap[I2C_MAIN], 0x44, 0x31);
 	HDMI_Write(regmap[I2C_MAIN], 0x55, 0x44);
 	HDMI_Write(regmap[I2C_MAIN], 0x57, 0x01);
 	HDMI_Write(regmap[I2C_MAIN], 0x5a, 0x02);
 
 	/*MIPI Analog*/
-	HDMI_Write(regmap[I2C_MAIN], 0x3e, 0xd6);
-	HDMI_Write(regmap[I2C_MAIN], 0x3f, 0xd4);
-	HDMI_Write(regmap[I2C_MAIN], 0x41, 0x3c);
-	HDMI_Write(regmap[I2C_MAIN], 0xb2, 0x00);
+	HDMI_Write(regmap[I2C_MAIN], 0x3e, 0xd6); // not written in test_1280x720 //TODO - 0x96 + MIPI_Lane_PN_Swap (0) );   //
+	HDMI_Write(regmap[I2C_MAIN], 0x3f, 0xd4); // not written in test_1280x720 // TODO remove
+	HDMI_Write(regmap[I2C_MAIN], 0x41, 0x3c); // not written in test_1280x720 // TODO 0x7c //HS_eq current
+	HDMI_Write(regmap[I2C_MAIN], 0xb2, 0x00); // in test_1280x720: value = 0x01
 }
 
-void lt8912_soft_power_on(void)
+void linuxrepo_lt8912_soft_power_on(void)
 {
-	lt8912_write_init_config();
+	linuxrepo_lt8912_write_init_config();
 	HDMI_Write(regmap[I2C_CEC_DSI], 0x13, MIPI_LANE_INPUT_TWO & 3);
 
-	lt8912_write_mipi_basic_config();
+	linuxrepo_lt8912_write_mipi_basic_config();
 }
 
-void lt8912_hard_power_on(void)
+void linuxrepo_lt8912_hard_power_on(void)
 {
 	cyhal_gpio_write(RESET_PIN,false);
 	Cy_SysLib_Delay(20);
@@ -387,10 +467,10 @@ int display_init(void){
 
 #if LINUX_REPO
 	reset_board();
-	//lt8912_hard_power_on();
-	lt8912_soft_power_on();
+	//linuxrepo_lt8912_hard_power_on();
+	linuxrepo_lt8912_soft_power_on();
 	//test_1280x720();
-	lt8912_video_on();
+	linuxrepo_lt8912_video_on();
 	//read_test_data();
 #endif  
 
@@ -498,6 +578,7 @@ void test_1280x720(void)
 
 		// Test pattern 1080P 60Hz
 		//I2CADR = 0x49;
+		//all of these are only written in test_1280x720
 		HDMI_Write(0x49,0x72,0x12);
 		HDMI_Write(0x49,0x73,0xc0);//RGD_PTN_DE_DLY[7:0]
 		HDMI_Write(0x49,0x74,0x00);//RGD_PTN_DE_DLY[11:8]  192
@@ -510,8 +591,6 @@ void test_1280x720(void)
 		HDMI_Write(0x49,0x7b,0x48);//RGD_PTN_V_TOTAL[10:8],RGD_PTN_H_TOTAL[11:8]
 		HDMI_Write(0x49,0x7c,0x2c);//RGD_PTN_HWIDTH[7:0]
 		HDMI_Write(0x49,0x7d,0x05);//RGD_PTN_HWIDTH[9:8],RGD_PTN_VWIDTH[5:0]
-
-
 		HDMI_Write(0x49,0x70,0x80);
 		HDMI_Write(0x49,0x71,0x76);
 
@@ -554,7 +633,7 @@ void msm_display(void){
 		HDMI_Write(0X48,0x3b, 0x00 );
 
 		//I2CADR = 0x90;
-	//	HDMI_Write(0X48,0x3e, 0x96 + MIPI_Lane_PN_Swap );   //
+	//	HDMI_Write(0X48,0x3e, 0x96 + MIPI_Lane_PN_Swap );   // TODO - why is this commented? to try with MIPI_Lane_PN_Swap = 0x00
 		HDMI_Write(0X48,0x41, 0x7c );   //HS_eq current
 
 		//I2CADR = 0x90;
@@ -788,6 +867,7 @@ void extdisp_config(void)
 	HDMI_Write(0x49,0x2c,0x00);
 	HDMI_Write(0x49,0x2d,0xc8);
 	HDMI_Write(0x49,0x2e,0x00);
+
 
 	//I2CADR = 0x90;
 	HDMI_Write(0x48,0x03,0x7f);
