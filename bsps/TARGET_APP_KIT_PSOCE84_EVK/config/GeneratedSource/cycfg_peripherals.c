@@ -36,8 +36,8 @@ cy_stc_gfx_layer_config_t GFXSS_graphics_layer =
     .tiling_type = vivLINEAR,
     .pos_x = 0,
     .pos_y = 0,
-    .width = 640,
-    .height = 480,
+    .width = 1024,
+    .height = 600,
     .zorder = 0,
     .layer_enable = true,
 };
@@ -78,22 +78,22 @@ cy_stc_gfx_dc_config_t GFXSS_dc_config =
 };
 cy_stc_mipidsi_display_params_t GFXSS_mipidsi_display_params = 
 {
-    .pixel_clock = 25200,
-    .hdisplay = 640,
-    .hsync_width = 96,
-    .hfp = 16,
-    .hbp = 48,
-    .vdisplay = 480,
-    .vsync_width = 2,
-    .vfp = 10,
-    .vbp = 33,
+    .pixel_clock = 40936,
+    .hdisplay = 1024,
+    .hsync_width = 32,
+    .hfp = 8,
+    .hbp = 40,
+    .vdisplay = 600,
+    .vsync_width = 8,
+    .vfp = 4,
+    .vbp = 6,
     .polarity_flags = 0,
 };
 cy_stc_mipidsi_config_t GFXSS_mipi_dsi_config = 
 {
     .virtual_ch = 0,
     .num_of_lanes = 2,
-    .per_lane_mbps = 302,
+    .per_lane_mbps = 491,
     .dpi_fmt = CY_MIPIDSI_FMT_RGB888,
     .dsi_mode = DSI_VIDEO_MODE,
     .max_phy_clk = 2500000000,

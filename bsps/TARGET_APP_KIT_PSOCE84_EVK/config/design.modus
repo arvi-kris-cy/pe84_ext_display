@@ -7,24 +7,24 @@
                     <Personality template="gfxss" version="1.0">
                         <Param id="display_type" value="GFX_DISP_TYPE_DSI_DPI"/>
                         <Param id="mode_flags" value="VID_MODE_TYPE_NON_BURST_SYNC_EVENTS"/>
-                        <Param id="display_width" value="640"/>
-                        <Param id="display_height" value="480"/>
+                        <Param id="display_width" value="1024"/>
+                        <Param id="display_height" value="600"/>
                         <Param id="fps" value="60"/>
                         <Param id="format" value="vivD24"/>
                         <Param id="gpu_enabled" value="true"/>
-                        <Param id="hsync_width" value="96"/>
-                        <Param id="hfp" value="16"/>
-                        <Param id="hbp" value="48"/>
-                        <Param id="vsync_width" value="2"/>
-                        <Param id="vfp" value="10"/>
-                        <Param id="vbp" value="33"/>
+                        <Param id="hsync_width" value="32"/>
+                        <Param id="hfp" value="8"/>
+                        <Param id="hbp" value="40"/>
+                        <Param id="vsync_width" value="8"/>
+                        <Param id="vfp" value="4"/>
+                        <Param id="vbp" value="6"/>
                         <Param id="no_of_dsi_lines" value="2"/>
                         <Param id="layer0_enabled" value="true"/>
                         <Param id="layer0_format" value="vivRGB565"/>
                         <Param id="layer0_pos_x" value="0"/>
                         <Param id="layer0_pos_y" value="0"/>
-                        <Param id="layer0_width" value="640"/>
-                        <Param id="layer0_height" value="480"/>
+                        <Param id="layer0_width" value="1024"/>
+                        <Param id="layer0_height" value="600"/>
                         <Param id="layer0_zorder" value="0"/>
                         <Param id="layer1_enabled" value="false"/>
                         <Param id="layer1_format" value="vivRGB565"/>
@@ -425,7 +425,7 @@
                 </Block>
                 <Block location="srss[0].clock[0].hfclk[12]">
                     <Personality template="hfclk_v2" version="1.0">
-                        <Param id="sourceClockNumber" value="0"/>
+                        <Param id="sourceClockNumber" value="1"/>
                         <Param id="divider" value="1"/>
                     </Personality>
                 </Block>
