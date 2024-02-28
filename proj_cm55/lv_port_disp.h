@@ -55,8 +55,8 @@ extern "C" {
 /*******************************************************************************
 * Macros
 *******************************************************************************/
-#define MY_DISP_HOR_RES    (640)
-#define MY_DISP_VER_RES    (480)
+#define MY_DISP_HOR_RES    (1024)
+#define MY_DISP_VER_RES    (600)
 
 extern volatile bool fb_pending;
 

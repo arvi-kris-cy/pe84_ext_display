@@ -103,16 +103,30 @@
 #define MIPI_H_Active	1024
 #define MIPI_V_Active	600
 
-#define MIPI_H_Total	1104
-#define MIPI_V_Total	618
+#define MIPI_H_Total	1414
+#define MIPI_V_Total	655
 
-#define MIPI_H_FrontPorch	8
-#define MIPI_H_SyncWidth	32
-#define MIPI_H_BackPorch	40
+#define MIPI_H_FrontPorch	160
+#define MIPI_H_SyncWidth	70
+#define MIPI_H_BackPorch	160
 
-#define MIPI_V_FrontPorch	4
-#define MIPI_V_SyncWidth	8
-#define MIPI_V_BackPorch	6
+#define MIPI_V_FrontPorch	12
+#define MIPI_V_SyncWidth	20
+#define MIPI_V_BackPorch	23
+
+// #define MIPI_H_Active	1024
+// #define MIPI_V_Active	600
+
+// #define MIPI_H_Total	1104
+// #define MIPI_V_Total	618
+
+// #define MIPI_H_FrontPorch	8
+// #define MIPI_H_SyncWidth	32
+// #define MIPI_H_BackPorch	40
+
+// #define MIPI_V_FrontPorch	4
+// #define MIPI_V_SyncWidth	8
+// #define MIPI_V_BackPorch	6
 
 // #define MIPI_H_Active	640
 // #define MIPI_V_Active	480

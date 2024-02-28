@@ -204,16 +204,9 @@ static void cm55_ns_gfx_task(void *arg)
         NVIC_EnableIRQ(GFXSS_GPU_IRQ);
 
         /* 10.1" display initialization */
-        // wf101jtyahmnb0_init(GFXSS_GFXSS_MIPIDSI);
+        wf101jtyahmnb0_init(GFXSS_GFXSS_MIPIDSI);
 
-        // qcom,mdss-dsi-on-command = [
-		// 	05 01 00 00 a0 00 02 11 00
-		// 	05 01 00 00 a0 00 02 29 00];
-		// qcom,mdss-dsi-off-command = [
-		// 	05 01 00 00 78 00 02 28 00
-		// 	05 01 00 00 78 00 02 10 00];
-
-        viv_set_commit(1);
+        // viv_set_commit(1);
 
         /* Allocate memory for VGLite from the vglite_heap_base */
         vg_lite_init_mem(register_mem_base, GPU_MEM_BASE,
@@ -225,10 +218,10 @@ static void cm55_ns_gfx_task(void *arg)
         vglite_status = vg_lite_init((MY_DISP_HOR_RES),
                              (MY_DISP_VER_RES));
 
-        result = display_init(); // display adapter init
-        if (CY_RSLT_SUCCESS != result) {
-            CY_ASSERT(0);
-        }
+        // result = display_init(); // display adapter init
+        // if (CY_RSLT_SUCCESS != result) {
+        //     CY_ASSERT(0);
+        // }
 
         if (VG_LITE_SUCCESS == vglite_status)
         {
@@ -260,13 +253,13 @@ static void cm55_ns_gfx_task(void *arg)
         lv_task_handler();
         cyhal_system_delay_ms(LV_DISP_DEF_REFR_PERIOD);
 
-        if (loop_count++ > 100)
-        {
-            printf("\r\n \r\n \r\n \r\n ");
-            // printf("\x1b[2J\x1b[;H"); /* Clear screen */
-            loop_count = 0;
-            read_test_data();
-        }
+        // if (loop_count++ > 100)
+        // {
+        //     printf("\r\n \r\n \r\n \r\n ");
+        //     // printf("\x1b[2J\x1b[;H"); /* Clear screen */
+        //     loop_count = 0;
+        //     read_test_data();
+        // }
     }
 }
 
