@@ -6,25 +6,25 @@
                 <Block location="gfxss[0]">
                     <Personality template="gfxss" version="1.0">
                         <Param id="display_type" value="GFX_DISP_TYPE_DSI_DPI"/>
-                        <Param id="mode_flags" value="VID_MODE_TYPE_BURST"/>
-                        <Param id="display_width" value="1024"/>
-                        <Param id="display_height" value="600"/>
-                        <Param id="fps" value="45"/>
+                        <Param id="mode_flags" value="VID_MODE_TYPE_NON_BURST_SYNC_EVENTS"/>
+                        <Param id="display_width" value="640"/>
+                        <Param id="display_height" value="480"/>
+                        <Param id="fps" value="60"/>
                         <Param id="format" value="vivD24"/>
                         <Param id="gpu_enabled" value="true"/>
-                        <Param id="hsync_width" value="70"/>
-                        <Param id="hfp" value="160"/>
-                        <Param id="hbp" value="160"/>
-                        <Param id="vsync_width" value="20"/>
-                        <Param id="vfp" value="12"/>
-                        <Param id="vbp" value="23"/>
+                        <Param id="hsync_width" value="64"/>
+                        <Param id="hfp" value="16"/>
+                        <Param id="hbp" value="80"/>
+                        <Param id="vsync_width" value="4"/>
+                        <Param id="vfp" value="3"/>
+                        <Param id="vbp" value="13"/>
                         <Param id="no_of_dsi_lines" value="2"/>
                         <Param id="layer0_enabled" value="true"/>
                         <Param id="layer0_format" value="vivRGB565"/>
                         <Param id="layer0_pos_x" value="0"/>
                         <Param id="layer0_pos_y" value="0"/>
-                        <Param id="layer0_width" value="1024"/>
-                        <Param id="layer0_height" value="600"/>
+                        <Param id="layer0_width" value="640"/>
+                        <Param id="layer0_height" value="480"/>
                         <Param id="layer0_zorder" value="0"/>
                         <Param id="layer1_enabled" value="false"/>
                         <Param id="layer1_format" value="vivRGB565"/>
