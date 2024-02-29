@@ -46,6 +46,7 @@
  *******************************************************************************/
 #include "gpu_enabled_app.h"
 #include "infineon_logo_paths.h"
+#include "extdisplay.h"
 
 /*******************************************************************************
  * Macros
@@ -195,9 +196,11 @@ void cm55_ns_gfx_task(void *arg)
     if (CY_GFX_SUCCESS == status)
     {
         /* 10.1" display initialization */
-        wf101jtyahmnb0_init(mipi_dsi_base);
+        // wf101jtyahmnb0_init(mipi_dsi_base);
 
         viv_set_commit(DISPLAY_MASK);
+
+        ext_adapter_display_init(); // display adapter init
 
         vg_lite_init_mem(register_mem_base, gpu_mem_base, vglite_heap_base,
                 (uint32_t) VGLITE_HEAP_SIZE);
@@ -207,7 +210,7 @@ void cm55_ns_gfx_task(void *arg)
         if (VG_LITE_SUCCESS == error)
         {
             /* Allocate the off-screen buffer0 */
-            buffer0.width  = DISPLAY_W;
+            buffer0.width  = DISPLAY_W; 
             buffer0.height = DISPLAY_H;
             buffer0.format = VG_LITE_BGR565;
 
