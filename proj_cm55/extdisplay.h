@@ -32,6 +32,22 @@
 
 
 // 根据前端MIPI输入信号的Timing修改以下宏定义的值:
+#define MIPI_Lane 2
+
+#define MIPI_H_Active	640
+#define MIPI_V_Active	480
+
+#define MIPI_H_Total	800
+#define MIPI_V_Total	525
+
+#define MIPI_H_FrontPorch	16
+#define MIPI_H_SyncWidth	64
+#define MIPI_H_BackPorch	80
+
+#define MIPI_V_FrontPorch	3
+#define MIPI_V_SyncWidth	4
+#define MIPI_V_BackPorch	13
+
 // #define MIPI_H_Active	800
 // #define MIPI_V_Active	600
 
@@ -97,22 +113,6 @@
 // #define MIPI_V_FrontPorch	12
 // #define MIPI_V_SyncWidth	3
 // #define MIPI_V_BackPorch	20
-
-#define MIPI_Lane 2
-
-#define MIPI_H_Active	640
-#define MIPI_V_Active	480
-
-#define MIPI_H_Total	800
-#define MIPI_V_Total	525
-
-#define MIPI_H_FrontPorch	16
-#define MIPI_H_SyncWidth	64
-#define MIPI_H_BackPorch	80
-
-#define MIPI_V_FrontPorch	3
-#define MIPI_V_SyncWidth	4
-#define MIPI_V_BackPorch	13
 
 // #define MIPI_H_Active	640
 // #define MIPI_V_Active	480

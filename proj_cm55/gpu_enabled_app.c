@@ -196,11 +196,10 @@ void cm55_ns_gfx_task(void *arg)
     if (CY_GFX_SUCCESS == status)
     {
         /* 10.1" display initialization */
-        // wf101jtyahmnb0_init(mipi_dsi_base);
-
+        wf101jtyahmnb0_init(mipi_dsi_base);
         viv_set_commit(DISPLAY_MASK);
 
-        ext_adapter_display_init(); // display adapter init
+        // ext_adapter_display_init(); // display adapter init
 
         vg_lite_init_mem(register_mem_base, gpu_mem_base, vglite_heap_base,
                 (uint32_t) VGLITE_HEAP_SIZE);
@@ -212,7 +211,7 @@ void cm55_ns_gfx_task(void *arg)
             /* Allocate the off-screen buffer0 */
             buffer0.width  = DISPLAY_W; 
             buffer0.height = DISPLAY_H;
-            buffer0.format = VG_LITE_BGR565;
+            buffer0.format = VG_LITE_RGB888; //VG_LITE_BGR565;
 
             error = vg_lite_allocate(&buffer0);
             if (error)
@@ -230,7 +229,7 @@ void cm55_ns_gfx_task(void *arg)
             /* Allocate the off-screen buffer1 */
             buffer1.width  = DISPLAY_W;
             buffer1.height = DISPLAY_H;
-            buffer1.format = VG_LITE_BGR565;
+            buffer1.format = VG_LITE_RGB888; //VG_LITE_BGR565;
 
             error = vg_lite_allocate(&buffer1);
             if (error)

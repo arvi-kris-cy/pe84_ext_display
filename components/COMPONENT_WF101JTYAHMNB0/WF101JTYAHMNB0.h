@@ -57,8 +57,8 @@ extern "C" {
 * Macros
 *******************************************************************************/
 /* Tessellation window = DISPLAY_W * DISPLAY_H */
-#define DISPLAY_W                 (640)
-#define DISPLAY_H                 (480)
+#define DISPLAY_W                 (1024)
+#define DISPLAY_H                 (600)
 
 
 #define PIN_LOW_DELAY_MS          (1U)

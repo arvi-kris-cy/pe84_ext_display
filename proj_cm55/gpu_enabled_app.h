@@ -63,7 +63,7 @@
 #define GFX_TASK_PRIORITY                   (configMAX_PRIORITIES - 1)
 #define GFX_TASK_DELAY_MS                   (20U)
 
-#define COLOR_DEPTH                         (16U)
+#define COLOR_DEPTH                         (24U)
 #define BITS_PER_PIXEL                      (8U)
 #define APP_BUFFER_COUNT                    (2U)
 #define DEFAULT_GPU_CMD_BUFFER_SIZE         ((64U) * (1024U))      /* 64 KB */
