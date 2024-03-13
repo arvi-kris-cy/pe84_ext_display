@@ -36,7 +36,7 @@ cy_stc_gfx_layer_config_t GFXSS_graphics_layer =
     .tiling_type = vivLINEAR,
     .pos_x = 0,
     .pos_y = 0,
-    .width = 1024,
+    .width = 800,
     .height = 600,
     .zorder = 0,
     .layer_enable = true,
@@ -78,14 +78,14 @@ cy_stc_gfx_dc_config_t GFXSS_dc_config =
 };
 cy_stc_mipidsi_display_params_t GFXSS_mipidsi_display_params = 
 {
-    .pixel_clock = 41677,
-    .hdisplay = 1024,
-    .hsync_width = 70,
-    .hfp = 160,
-    .hbp = 160,
+    .pixel_clock = 40091,
+    .hdisplay = 800,
+    .hsync_width = 128,
+    .hfp = 48,
+    .hbp = 88,
     .vdisplay = 600,
-    .vsync_width = 20,
-    .vfp = 12,
+    .vsync_width = 4,
+    .vfp = 1,
     .vbp = 23,
     .polarity_flags = 0,
 };
@@ -93,11 +93,11 @@ cy_stc_mipidsi_config_t GFXSS_mipi_dsi_config =
 {
     .virtual_ch = 0,
     .num_of_lanes = 2,
-    .per_lane_mbps = 500,
+    .per_lane_mbps = 481,
     .dpi_fmt = CY_MIPIDSI_FMT_RGB888,
     .dsi_mode = DSI_VIDEO_MODE,
     .max_phy_clk = 2500000000,
-    .mode_flags = VID_MODE_TYPE_BURST,
+    .mode_flags = VID_MODE_TYPE_NON_BURST_SYNC_EVENTS,
     .display_params = &GFXSS_mipidsi_display_params,
 };
 cy_stc_gfx_config_t GFXSS_config = 

@@ -744,8 +744,8 @@ void pattern_test(void)
 
 	//	video = &video_640x480_60Hz;
 	//	video = &video_720x480_60Hz;
-	//	video = &video_800x600_60Hz;
-	video = &video_1024x768_60Hz;
+		video = &video_800x600_60Hz;
+	// video = &video_1024x768_60Hz;
 	//	video = &video_1280x720_60Hz;
 	// video = &video_1920x1080_60Hz;
 	

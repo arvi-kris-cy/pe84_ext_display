@@ -58,7 +58,7 @@ extern "C" {
 *******************************************************************************/
 /* Tessellation window = DISPLAY_W * DISPLAY_H */
 #define DISPLAY_H                 (600U)
-#define DISPLAY_W                 (1024U)
+#define DISPLAY_W                 (800U)
 
 #define PIN_LOW_DELAY_MS          (1U)
 #define PIN_HIGH_DELAY_MS         (5U)

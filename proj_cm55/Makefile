@@ -84,20 +84,21 @@ APPTYPE=flash
 # tree for source code and builds it. The SOURCES variable can be used to
 # manually add source code to the build process from a location not searched
 # by default, or otherwise not found by the build system.
-SOURCES=
+SOURCES+=
 
 # Like SOURCES, but for include directories. Value should be paths to
 # directories (without a leading -I).
-INCLUDES=
+INCLUDES+=
 
 # Select softfp or hardfp floating point. Default is softfp.
-VFP_SELECT=
+VFP_SELECT+=
 
 # Additional / custom C compiler flags.
 #
 # NOTE: Includes and defines should use the INCLUDES and DEFINES variable
 # above.
-CFLAGS= 
+CFLAGS+=
+
 # Additional / custom C++ compiler flags.
 #
 # NOTE: Includes and defines should use the INCLUDES and DEFINES variable
@@ -119,10 +120,11 @@ LDLIBS=
 LINKER_SCRIPT=
 
 # Custom pre-build commands to run.
-PREBUILD=
+PREBUILD+=
 
 # Custom post-build commands to run.
-POSTBUILD=
+POSTBUILD+=
+
 
 ################################################################################
 # Paths

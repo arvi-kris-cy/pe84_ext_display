@@ -1,8 +1,8 @@
 /******************************************************************************
  * File Name:   main.c
  *
- * Description: This is the source code for the graphics rendering with 
- *              CPU vs GPU path.
+ * Description: This is the source code for the external MIPI DSI to HMDI 
+ *              adapter test (LT8912)
  *
  * Related Document: See README.md
  *
