@@ -32,7 +32,15 @@
         "cortex-debug.openocdPath": "${config:modustoolbox.toolsPath}/../../../../Users/kn8al/ModusToolbox/packs/ModusToolbox-PSoC-E84-Early-Access-Pack/tools/openocd/bin/openocd.exe",
         "cortex-debug.JLinkGDBServerPath.windows": "C:/Program Files/SEGGER/JLink/JLinkGDBServerCL.exe",
         "cortex-debug.JLinkGDBServerPath.osx": "/Applications/SEGGER/JLink/JLinkGDBServerCLExe",
-        "cortex-debug.JLinkGDBServerPath.linux": "JLinkGDBServerCLExe"
+        "cortex-debug.JLinkGDBServerPath.linux": "JLinkGDBServerCLExe",
+        "files.associations": {
+            "cy_retarget_io.h": "c",
+            "extdisplay.h": "c",
+            "gpu_enabled_app.h": "c",
+            "infineon_logo_paths.h": "c",
+            "functional": "c",
+            "xlocale": "c"
+        }
     },
     "extensions": {
         "recommendations": [ "marus25.cortex-debug", "ms-vscode.cpptools", "dan-c-underwood.arm" ]

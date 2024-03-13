@@ -44,6 +44,7 @@
 /*******************************************************************************
  * Header Files
  *******************************************************************************/
+#include "extdisplay.h"
 #include "gpu_enabled_app.h"
 #include "infineon_logo_paths.h"
 
@@ -195,7 +196,7 @@ void cm55_ns_gfx_task(void *arg)
     if (CY_GFX_SUCCESS == status)
     {
         /* 10.1" display initialization */
-        wf101jtyahmnb0_init(mipi_dsi_base);
+        // wf101jtyahmnb0_init(mipi_dsi_base);
 
         viv_set_commit(DISPLAY_MASK);
 
@@ -270,6 +271,12 @@ void cm55_ns_gfx_task(void *arg)
 
     /* draw the image */
     draw();
+
+    ext_display_adapter_init();
+    printf("\r\n#LT8912B start# ("__DATE__ " : " __TIME__ ")");
+	ext_display_adapter_reset();
+	ext_display_adapter_configure();
+
 
     for(;;)
     {
