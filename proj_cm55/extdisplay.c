@@ -141,7 +141,7 @@ uint8_t ext_display_adapter_readbyte(uint8_t reg_addr)
 	{
 		if (CY_RSLT_SUCCESS == cyhal_i2c_master_read(&mI2C, (I2CADR >> 1), readBuffer, 1, 0, true))
 		{
-			printf("<Read from I2CADR 0x%02X reg=0x%02X val=0x%02X>\n\r", I2CADR, dataBuffer[0], readBuffer[0]);
+			// printf("<Read from I2CADR 0x%02X reg=0x%02X val=0x%02X>\n\r", I2CADR, dataBuffer[0], readBuffer[0]);
 		}
 	}
 	else
@@ -684,7 +684,7 @@ void MIPI_Input_det(void)
 
 	if ((Hsync_H != Hsync_H_last) || (Vsync_H != Vsync_H_last)) /*hiht byte changed*/
 	{
-		printf("\r\nMIPI_Input_det 0x9c~9f = 0x%02X, 0x%02X, 0x%02X, 0x%02X\r\n", Hsync_H, Hsync_L, Vsync_H, Vsync_L);
+		printf("\r\nMIPI_Input_det 0x9c~9f = Hsync_H: 0x%02X, Hsync_L: 0x%02X, Vsync_H: 0x%02X, Vsync_L: 0x%02X\r\n", Hsync_H, Hsync_L, Vsync_H, Vsync_L);
 
 		if (Vsync_H == 0x02 && Vsync_L <= 0xef && Vsync_L >= 0xec) // 0x2EE
 		{

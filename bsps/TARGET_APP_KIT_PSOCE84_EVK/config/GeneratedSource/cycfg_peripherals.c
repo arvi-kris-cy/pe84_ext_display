@@ -97,7 +97,7 @@ cy_stc_mipidsi_config_t GFXSS_mipi_dsi_config =
     .dpi_fmt = CY_MIPIDSI_FMT_RGB888,
     .dsi_mode = DSI_VIDEO_MODE,
     .max_phy_clk = 2500000000,
-    .mode_flags = VID_MODE_TYPE_NON_BURST_SYNC_EVENTS,
+    .mode_flags = VID_MODE_TYPE_NON_BURST_SYNC_PULSES,
     .display_params = &GFXSS_mipidsi_display_params,
 };
 cy_stc_gfx_config_t GFXSS_config = 
