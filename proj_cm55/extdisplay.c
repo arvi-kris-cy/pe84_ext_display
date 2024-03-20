@@ -689,21 +689,21 @@ void MIPI_Input_det(void)
 		if (Vsync_H == 0x02 && Vsync_L <= 0xef && Vsync_L >= 0xec) // 0x2EE
 		{
 			video = &video_1280x720_60Hz;
-			printf("\r\nvideoformat = VESA_1280x720_60");
+			printf("\r\nvideoformat = VESA_1280x720_60\r\n");
 		}
 		else if (Vsync_H == 0x03 && Vsync_L <= 0x3a && Vsync_L >= 0x34) // 0x337
 		{
 			video = &video_1280x800_60Hz;
-			printf("\r\nvideoformat = VESA_1280x800_60");
+			printf("\r\nvideoformat = VESA_1280x800_60\r\n");
 		}
 		else if (Vsync_H == 0x04 && Vsync_L <= 0x67 && Vsync_L >= 0x63) // 0x465
 		{
 			video = &video_1920x1080_60Hz;
-			printf("\r\nvideoformat = VESA_1920x1080_60");
+			printf("\r\nvideoformat = VESA_1920x1080_60\r\n");
 		}
 		else
 		{
-			printf("\r\nvideoformat = video_none");
+			printf("\r\nvideoformat = video_none\r\n");
 		}
 
 		Hsync_L_last = Hsync_L;

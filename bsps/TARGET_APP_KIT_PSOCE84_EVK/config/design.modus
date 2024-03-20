@@ -6,7 +6,7 @@
                 <Block location="gfxss[0]">
                     <Personality template="gfxss" version="1.0">
                         <Param id="display_type" value="GFX_DISP_TYPE_DSI_DPI"/>
-                        <Param id="mode_flags" value="VID_MODE_TYPE_NON_BURST_SYNC_PULSES"/>
+                        <Param id="mode_flags" value="VID_MODE_TYPE_BURST"/>
                         <Param id="display_width" value="800"/>
                         <Param id="display_height" value="600"/>
                         <Param id="fps" value="60"/>
