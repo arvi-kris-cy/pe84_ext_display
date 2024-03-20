@@ -196,7 +196,7 @@ void cm55_ns_gfx_task(void *arg)
     if (CY_GFX_SUCCESS == status)
     {
         /* 10.1" display initialization */
-        wf101jtyahmnb0_init(mipi_dsi_base);
+        // wf101jtyahmnb0_init(mipi_dsi_base);
 
         viv_set_commit(DISPLAY_MASK);
 

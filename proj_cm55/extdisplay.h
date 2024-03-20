@@ -57,7 +57,7 @@
 #define _hdmi_output
 #define _lvds_bypass
 
-#define _pattern_test_
+// #define _pattern_test_
 
 // #define _lane_swap_ // mipi input 3210
 // #define _pn_swap_   //mipi input lane pn swap
@@ -118,7 +118,7 @@ typedef struct panel_parameter
  * Function Definitions
  *******************************************************************************/
 int ext_display_adapter_writebyte(uint8_t reg_addr, uint8_t value);
-int ext_display_adapter_readbyte(uint8_t reg_addr);
+uint8_t ext_display_adapter_readbyte(uint8_t reg_addr);
 int ext_display_adapter_init(void);
 void ext_display_adapter_reset(void);
 void ext_display_adapter_configure(void);

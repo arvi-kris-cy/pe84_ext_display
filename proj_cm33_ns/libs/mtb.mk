@@ -12,7 +12,7 @@ SEARCH_TARGET_APP_KIT_PSOCE84_EVK=../bsps/TARGET_APP_KIT_PSOCE84_EVK
 # The search paths for the included middleware
 SEARCH_cmsis=../../mtb_shared/cmsis/release-v5.8.1
 SEARCH_core-lib=../../mtb_shared/core-lib/release-v1.4.2
-SEARCH_core-make=../../mtb_shared/core-make/release-v3.2.2
+SEARCH_core-make=../../mtb_shared/core-make/release-v3.3.0
 SEARCH_mtb-hal-cat1=../../mtb_shared/mtb-hal-cat1/release-v2.5.5
 SEARCH_mtb-pdl-cat1=../../mtb_shared/mtb-pdl-cat1/release-v3.5.4
 SEARCH_recipe-make-cat1d=../../mtb_shared/recipe-make-cat1d/release-v1.0.2

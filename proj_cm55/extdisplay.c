@@ -81,6 +81,7 @@ void ext_display_adapter_reset(void)
 	Cy_SysLib_Delay(200);				// 200ms ideal
 	cyhal_gpio_write(RESET_PIN, true);
 	Cy_SysLib_Delay(200); // 200ms ideal
+	printf("ext_display_adapter_reset done\r\n");
 }
 
 int ext_display_adapter_init(void)
@@ -93,7 +94,7 @@ int ext_display_adapter_init(void)
 	result = cyhal_gpio_init(RESET_PIN, CYHAL_GPIO_DIR_OUTPUT, CYHAL_GPIO_DRIVE_STRONG, 1); // RESET
 	handle_error(result);
 
-	printf("I2C Master ->");
+	printf("ext_display_adapter_init GPIO and I2C Master... ");
 	mI2C_cfg.is_slave = false;
 	mI2C_cfg.address = 0;
 	mI2C_cfg.frequencyhal_hz = I2C_FREQ;
@@ -111,7 +112,7 @@ int ext_display_adapter_init(void)
 	Cy_GPIO_SetDriveSel(CYHAL_GET_PORTADDR(ADAPTER_I2C_SDA),
 						CYHAL_GET_PIN(ADAPTER_I2C_SDA), CY_GPIO_DRIVE_FULL);
 
-	printf("Done\r\n\n");
+	printf("done\r\n");
 	return 0;
 }
 
@@ -132,7 +133,7 @@ int ext_display_adapter_writebyte(uint8_t reg_addr, uint8_t value)
 	return CY_RSLT_SUCCESS;
 }
 
-int ext_display_adapter_readbyte(uint8_t reg_addr)
+uint8_t ext_display_adapter_readbyte(uint8_t reg_addr)
 {
 	uint8_t dataBuffer[1] = {reg_addr};
 	uint8_t readBuffer[1];
@@ -140,14 +141,14 @@ int ext_display_adapter_readbyte(uint8_t reg_addr)
 	{
 		if (CY_RSLT_SUCCESS == cyhal_i2c_master_read(&mI2C, (I2CADR >> 1), readBuffer, 1, 0, true))
 		{
-			printf("Read from I2CADR 0x%02X reg=0x%02X val=0x%02X \n\r", I2CADR, dataBuffer[0], readBuffer[0]);
+			printf("<Read from I2CADR 0x%02X reg=0x%02X val=0x%02X>\n\r", I2CADR, dataBuffer[0], readBuffer[0]);
 		}
 	}
 	else
 	{
-		printf("ERR reading from I2CADR 0x%02X reg=0x%02X val=0x%02X \n\r", I2CADR, dataBuffer[0], readBuffer[0]);
+		printf("ERR <reading from I2CADR 0x%02X reg=0x%02X val=0x%02X>\n\r", I2CADR, dataBuffer[0], readBuffer[0]);
 	}
-	return CY_RSLT_SUCCESS;
+	return readBuffer[0];
 }
 
 void ext_display_adapter_configure()
@@ -167,7 +168,7 @@ void ext_display_adapter_configure()
 	MipiAnalog();
 	MipiBasicSet();
 	DDSConfig();
-	MIPI_Video_Setup(&video_1920x1080_60Hz);
+	MIPI_Video_Setup(&video_800x600_60Hz);
 	MIPI_Input_det();
 	AudioIIsEn();
 
@@ -319,7 +320,7 @@ void MipiBasicSet(void)
 {
 	I2CADR = 0x92;
 	ext_display_adapter_writebyte(0x10, 0x01); // term en
-	ext_display_adapter_writebyte(0x11, 0x10); // settle
+	ext_display_adapter_writebyte(0x11, 0x08); //0x10); // settle
 	// ext_display_adapter_writebyte(0x12,0x08);  // trail
 	ext_display_adapter_writebyte(0x13, lane_cnt); // 00 4 lane //01 1 lane //02 2 lane //03 3lane
 	ext_display_adapter_writebyte(0x14, 0x00);	   // debug mux
@@ -602,7 +603,7 @@ void LvdsOutput(bool on)
 
 		ext_display_adapter_writebyte(0x44, 0x30); // enbale lvds output
 
-		printf("\r\nLT8912_lvds_output_enable!");
+		printf("\r\nLT8912_lvds_output_enable!\r\n");
 	}
 	else
 	{
@@ -617,13 +618,13 @@ void HdmiOutput(bool on)
 	{
 		I2CADR = 0x90;
 		ext_display_adapter_writebyte(0x33, 0x0e); // enable hdmi output
-		printf("\r\nLT8912_hdmi_output_enable!");
+		printf("\r\nLT8912_hdmi_output_enable!\r\n");
 	}
 	else
 	{
 		I2CADR = 0x90;
 		ext_display_adapter_writebyte(0x33, 0x0c); // disable hdmi output
-		printf("\r\nLT8912_hdmi_output_disable!");
+		printf("\r\nLT8912_hdmi_output_disable!\r\n");
 	}
 }
 
@@ -651,7 +652,7 @@ void lt8912_check_dds(void)
 		reg_920d = ext_display_adapter_readbyte(0x0d);
 		reg_920e = ext_display_adapter_readbyte(0x0e);
 		reg_920f = ext_display_adapter_readbyte(0x0f);
-		printf("\r\n 0x0c~0f = 0x%0X, 0x%0X, 0x%0X", reg_920c, reg_920d, reg_920e);
+		printf("Check DDS 0x0c~0f = 0x%02X, 0x%02X, 0x%02X, 0x%02X \r\n", reg_920c, reg_920d, reg_920e, reg_920f);
 		//		if((reg_920e == 0xd2)&&(reg_920d < 0xff)&&(reg_920d > 0xd0)) //shall update threshold here base on actual dds result.
 		//		{
 		//			printf("\r\nlvds_check_dds: stable!");
@@ -683,7 +684,7 @@ void MIPI_Input_det(void)
 
 	if ((Hsync_H != Hsync_H_last) || (Vsync_H != Vsync_H_last)) /*hiht byte changed*/
 	{
-		printf("\r\n0x9c~9f = %x, %x, %x, %x", Hsync_H, Hsync_L, Vsync_H, Vsync_L);
+		printf("\r\nMIPI_Input_det 0x9c~9f = 0x%02X, 0x%02X, 0x%02X, 0x%02X\r\n", Hsync_H, Hsync_L, Vsync_H, Vsync_L);
 
 		if (Vsync_H == 0x02 && Vsync_L <= 0xef && Vsync_L >= 0xec) // 0x2EE
 		{
@@ -803,12 +804,12 @@ uint8_t LT8912_Get_HPD(void)
 	I2CADR = 0x90;
 	if ((ext_display_adapter_readbyte(0xc1) & 0x80) == 0x80)
 	{
-		printf("\r\nLT8912_Get_HPD: high");
+		printf("\r\nLT8912_Get_HPD: high\r\n");
 		return 1;
 	}
 	else
 	{
-		printf("\r\nLT8912_Get_HPD: low");
+		printf("\r\nLT8912_Get_HPD: low\r\n");
 		return 0;
 	}
 }
@@ -816,7 +817,10 @@ uint8_t LT8912_Get_HPD(void)
 void read_LT8912_chip_ID(void)
 {
 	I2CADR = 0x90;
-	printf("\r\nLT8912 chip ID: 0x%bx, 0x%bx", ext_display_adapter_readbyte(0x00), ext_display_adapter_readbyte(0x01));
+	uint8_t chip_ID0 = ext_display_adapter_readbyte(0x00);
+	uint8_t chip_ID1 = ext_display_adapter_readbyte(0x01);
+
+	printf("\r\nLT8912 chip ID: 0x%02X, 0x%02X\r\n", chip_ID0, chip_ID1);
 }
 
 void LT8912B_Suspend(bool on)
