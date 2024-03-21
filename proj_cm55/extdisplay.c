@@ -327,7 +327,7 @@ void MipiBasicSet(void)
 
 #ifdef _lane_swap_							   // for EVB only, if mipi pin map follow reference design, no need swap lane.
 	ext_display_adapter_writebyte(0x15, 0xa8); // lane swap:3210
-	printf("\r\nmipi basic set: lane swap 3210, %bd", lane_cnt);
+	printf("\r\nmipi basic set: lane swap 3210, %d lanes", lane_cnt);
 #else
 	ext_display_adapter_writebyte(0x15, 0x00); // lane swap:0123
 #endif

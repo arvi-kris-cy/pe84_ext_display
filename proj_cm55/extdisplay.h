@@ -59,7 +59,7 @@
 
 // #define _pattern_test_
 
-// #define _lane_swap_ // mipi input 3210
+#define _lane_swap_ // mipi input 3210
 // #define _pn_swap_   //mipi input lane pn swap
 
 #define dds_debug
