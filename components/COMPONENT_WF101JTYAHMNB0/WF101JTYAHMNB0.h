@@ -7,7 +7,7 @@
 * Related Document : See README.md
 *
 ********************************************************************************
-* Copyright 2023, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2023-2024, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -57,8 +57,8 @@ extern "C" {
 * Macros
 *******************************************************************************/
 /* Tessellation window = DISPLAY_W * DISPLAY_H */
-#define DISPLAY_H                 (600U)//(768U)
-#define DISPLAY_W                 (800U)//(1024U)
+#define DISPLAY_H                 (600U)
+#define DISPLAY_W                 (1024U)
 
 #define PIN_LOW_DELAY_MS          (1U)
 #define PIN_HIGH_DELAY_MS         (5U)

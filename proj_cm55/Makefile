@@ -7,7 +7,7 @@
 #
 ################################################################################
 # \copyright
-# Copyright 2023, Cypress Semiconductor Corporation (an Infineon company)
+# Copyright 2023-2024, Cypress Semiconductor Corporation (an Infineon company)
 # SPDX-License-Identifier: Apache-2.0
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -57,7 +57,7 @@ VERBOSE=
 COMPONENTS+=FREERTOS RTOS_AWARE WF101JTYAHMNB0 ILI2511
 
 # Like COMPONENTS, but disable optional code that was enabled by default.
-DISABLE_COMPONENTS=
+DISABLE_COMPONENTS+=
 
 SEARCH+=../components
 
@@ -71,50 +71,50 @@ APPTYPE=flash
 # tree for source code and builds it. The SOURCES variable can be used to
 # manually add source code to the build process from a location not searched
 # by default, or otherwise not found by the build system.
-SOURCES=
+SOURCES+=
 
 # Like SOURCES, but for include directories. Value should be paths to
 # directories (without a leading -I).
-INCLUDES=../shared/include
+INCLUDES+=
 
 # Add additional defines to the build process (without a leading -D).
 DEFINES+=CY_RETARGET_IO_CONVERT_LF_TO_CRLF USE_GPU _BAREMETAL=0  
 
 # Select softfp or hardfp floating point. Default is softfp.
-VFP_SELECT=
+VFP_SELECT+=
 
 # Additional / custom C compiler flags.
 #
 # NOTE: Includes and defines should use the INCLUDES and DEFINES variable
 # above.
-CFLAGS=
+CFLAGS+=
 
 # Additional / custom C++ compiler flags.
 #
 # NOTE: Includes and defines should use the INCLUDES and DEFINES variable
 # above.
-CXXFLAGS=
+CXXFLAGS+=
 
 # Additional / custom assembler flags.
 #
 # NOTE: Includes and defines should use the INCLUDES and DEFINES variable
 # above.
-ASFLAGS=
+ASFLAGS+=
 
 # Additional / custom linker flags.
-LDFLAGS=
+LDFLAGS+=
 
 # Additional / custom libraries to link in to the application.
-LDLIBS=
+LDLIBS+=
 
 # Path to the linker script to use (if empty, use the default linker script).
-LINKER_SCRIPT=
+LINKER_SCRIPT+=
 
 # Custom pre-build commands to run.
-PREBUILD=
+PREBUILD+=
 
 # Custom post-build commands to run.
-POSTBUILD=
+POSTBUILD+=
 
 
 ################################################################################

@@ -7,7 +7,7 @@
 * Related Document : See README.md
 *
 ********************************************************************************
-* Copyright 2023, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2023-2024, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -55,9 +55,10 @@ extern "C" {
 /*******************************************************************************
 * Macros
 *******************************************************************************/
-#define MY_DISP_HOR_RES    (800U)//(1024U)
-#define MY_DISP_VER_RES    (600U)//(768U)
+#define MY_DISP_HOR_RES    (1024U)
+#define MY_DISP_VER_RES    (600U)
 
+extern volatile bool fb_pending;
 
 /*******************************************************************************
 * Function Prototypes

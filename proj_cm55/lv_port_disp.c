@@ -7,7 +7,7 @@
 * Related Document : See README.md
 *
 ********************************************************************************
-* Copyright 2023, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2023-2024, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -105,7 +105,9 @@ static void disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area,
     Cy_GFXSS_Set_FrameBuffer((GFXSS_Type*) GFXSS, (uint32_t*) color_p,
             &gfx_context);
 
-    cyhal_system_delay_ms(FRAME_COMPLT_TIME_MS);
+    fb_pending = true;
+
+    while(fb_pending);
 
     /* Inform the graphics library that you are ready with the flushing */
     lv_disp_flush_ready(disp_drv);

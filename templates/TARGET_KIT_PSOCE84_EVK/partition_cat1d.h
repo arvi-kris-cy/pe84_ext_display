@@ -10,7 +10,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2023, Cypress Semiconductor Corporation (an Infineon company)
+* Copyright 2023-2024, Cypress Semiconductor Corporation (an Infineon company)
 * SPDX-License-Identifier: Apache-2.0
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -81,12 +81,32 @@
 #define SOCMEM_NS_RAM_CBUS_START    0x06000000
 #define SOCMEM_S_RAM_CBUS_START     0x16000000
 #define SOCMEM_RAM_SIZE             0x00500000
-#define SOCMEM_SHARED_MEM_SIZE      0x00100000
-#define SOCMEM_SHARED_OFFSET        0x00300000
-#define SOCMEM_NS_SAHB_SHARED_START (SOCMEM_NS_RAM_SAHB_START + SOCMEM_SHARED_OFFSET)
-#define SOCMEM_GPUBUF_OFFSET        0x00000000
-#define SOCMEM_GPUBUF_SIZE          0x00300000
+
+
+#ifdef SOCMEMSRAM_GPUBUF_SIZE
+#define SOCMEM_GPUBUF_SIZE          (SOCMEMSRAM_GPUBUF_SIZE)
+#else
+#define SOCMEM_GPUBUF_SIZE          (0x00080000)
+#endif
+
+#ifdef SOCMEMSRAM_CM55NS_APP_SIZE
+#define SOCMEM_CM55NS_APP_SIZE_DEF  (SOCMEMSRAM_CM55NS_APP_SIZE)
+#else
+#define SOCMEM_CM55NS_APP_SIZE_DEF  (0x00080000)
+#endif
+
+#define SOCMEM_CM55NS_IMAGE_OFFSET  0x00000000
+#define SOCMEM_GPUBUF_OFFSET        (SOCMEM_CM55NS_IMAGE_OFFSET + SOCMEM_CM55NS_APP_SIZE_DEF)
 #define SOCMEM_GPUBUF_START         (SOCMEM_NS_RAM_SAHB_START + SOCMEM_GPUBUF_OFFSET)
+
+#define SOCMEM_SHARED_OFFSET        (SOCMEM_GPUBUF_OFFSET + SOCMEM_GPUBUF_SIZE)
+#define SOCMEM_NS_SAHB_SHARED_START (SOCMEM_NS_RAM_SAHB_START + SOCMEM_SHARED_OFFSET)
+
+#ifdef SOCMEMSRAM_SHARED_SIZE
+#define SOCMEM_SHARED_MEM_SIZE      (SOCMEMSRAM_SHARED_SIZE)
+#else
+#define SOCMEM_SHARED_MEM_SIZE      (0x00100000)
+#endif
 
 #define FLASH_NS_SAHB_START         0x60000000
 #define FLASH_S_SAHB_START          0x70000000

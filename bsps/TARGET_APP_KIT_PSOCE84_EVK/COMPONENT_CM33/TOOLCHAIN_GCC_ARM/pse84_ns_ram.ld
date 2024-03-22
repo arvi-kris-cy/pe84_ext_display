@@ -41,7 +41,7 @@ SEARCH_DIR(.)
 GROUP(-lgcc -lc -lnosys)
 ENTRY(Reset_Handler)
 
-INCLUDE pse84_common.ld
+INCLUDE pse84_common_ram.ld
 
 CODE_XIP0_OFFSET            = XIP0_CM33NS_APP_OFFSET;
 CODE_XIP0_VMA               = XIP0_NS_CBUS_START + CODE_XIP0_OFFSET;
@@ -135,6 +135,11 @@ SHARED_MEM1_LMA             = SOCMEMSRAM_SHARED_LMA;
 SHARED_MEM1_VMA             = SOCMEMSRAM_SHARED_LMA;
 SHARED_MEM1_SIZE            = SOCMEMSRAM_SHARED_SIZE;
 
+SOCMEMSRAM_GPUBUF_VMA       = (SOCMEMSRAM_NS_SAHB_START + SOCMEMSRAM_GPUBUF_OFFSET);
+GPU_BUF_VMA                 = SOCMEMSRAM_GPUBUF_VMA;
+GPU_BUF_LMA                 = SOCMEMSRAM_GPUBUF_VMA;
+GPU_BUF_SIZE                = SOCMEMSRAM_GPUBUF_SIZE;
+
 __app_text1_vma__           = CODE_1_VMA;
 
 __app_text2_vma__           = CODE_2_VMA;
@@ -163,6 +168,8 @@ MEMORY
     data_3        (rwx)    : ORIGIN = DATA_3_VMA,     LENGTH = DATA_3_SIZE
     shared_mem0   (rwx)    : ORIGIN = SHARED_MEM0_LMA LENGTH = SHARED_MEM0_SIZE /* shared_ram0 */
     shared_mem1   (rxw)    : ORIGIN = SHARED_MEM1_LMA LENGTH = SHARED_MEM1_SIZE /* shared_ram1 */
+    gpu_buf       (rxw)    : ORIGIN = GPU_BUF_LMA     LENGTH = GPU_BUF_SIZE     /* gpu_buf  */
+
 }
 
 SECTIONS
@@ -377,4 +384,9 @@ SECTIONS
         . = ALIGN(4);
         __cy_socmem_data_vma_end__ = .;
     }  > data_3
+
+    .cy_gpu_buf (NOLOAD):
+    {
+      KEEP(*(.cy_gpu_buf))
+    }  > gpu_buf
 }

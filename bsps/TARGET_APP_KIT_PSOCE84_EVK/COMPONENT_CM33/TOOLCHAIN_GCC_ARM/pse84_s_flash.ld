@@ -58,12 +58,12 @@ CODE_RRAM_VMA               = RRAM_NVM_MAIN_S_CBUS_START + CODE_RRAM_OFFSET;
 CODE_RRAM_LMA               = RRAM_NVM_MAIN_S_START + CODE_RRAM_OFFSET;
 CODE_RRAM_SIZE              = RRAM_CM33S_APP_SIZE;
 
-DATA_SRAM0_OFFSET           = SRAM0_CM33S_DATA_OFFSET_FLASH_BOOT;
+DATA_SRAM0_OFFSET           = SRAM0_CM33S_DATA_OFFSET;
 DATA_SRAM0_VMA              = SRAM0_S_SAHB_START + DATA_SRAM0_OFFSET;
 DATA_SRAM0_LMA              = SRAM0_S_SAHB_START + DATA_SRAM0_OFFSET;
 DATA_SRAM0_SIZE             = SRAM0_CM33S_DATA_SIZE;
 
-SRAM0_SHARED_LMA            = SRAM0_S_SAHB_START + SRAM0_SHARED_OFFSET_FLASH_BOOT + SRAM0_SHARED_CM0_SIZE;
+SRAM0_SHARED_LMA            = SRAM0_S_SAHB_START + SRAM0_SHARED_OFFSET + SRAM0_SHARED_CM0_SIZE;
 SRAM0_SHARED_CM33_SIZE      = SRAM0_SHARED_SIZE - SRAM0_SHARED_CM0_SIZE;
 
 SRAM1_SHARED_LMA            = SRAM1_S_SAHB_START + SRAM1_SIZE - SRAM1_SHARED_SIZE;
@@ -72,17 +72,17 @@ RAMVECTORS_ALIGNMENT        = CM33_RAMVECTORS_ALIGNMENT;
 MSP_STACK_SIZE              = CM33S_MSP_STACK_SIZE;
 /*----------------------------------------*/
 
-CODE_3_VMA                  = CODE_XIP0_VMA;
-CODE_3_LMA                  = CODE_XIP0_LMA;
-CODE_3_SIZE                 = CODE_XIP0_SIZE;
+CODE_1_VMA                  = CODE_XIP0_VMA;
+CODE_1_LMA                  = CODE_XIP0_LMA;
+CODE_1_SIZE                 = CODE_XIP0_SIZE;
 
 CODE_2_VMA                  = CODE_SRAM0_VMA;
 CODE_2_LMA                  = CODE_SRAM0_LMA;
 CODE_2_SIZE                 = CODE_SRAM0_SIZE;
 
-CODE_1_VMA                  = CODE_RRAM_VMA;
-CODE_1_LMA                  = CODE_RRAM_LMA;
-CODE_1_SIZE                 = CODE_RRAM_SIZE;
+CODE_3_VMA                  = CODE_RRAM_VMA;
+CODE_3_LMA                  = CODE_RRAM_LMA;
+CODE_3_SIZE                 = CODE_RRAM_SIZE;
 
 CODE_NSC_VMA                = CODE_1_VMA + CODE_1_SIZE;
 CODE_NSC_LMA                = CODE_1_LMA + CODE_1_SIZE;
@@ -105,7 +105,7 @@ SHARED_MEM1_SIZE            = SRAM1_SHARED_CM33S_SIZE;
 
 __app_text1_vma__           = CODE_1_VMA;
 __app_text1_lma__           = CODE_1_LMA;
-
+__app_text2_vma__           = CODE_2_VMA;
 __app_data1_vma__           = DATA_1_VMA;
 
 
@@ -113,6 +113,7 @@ MEMORY
 {
     code_1      (rx)    : ORIGIN = CODE_1_VMA,        LENGTH = CODE_1_SIZE
     codeNsc     (rx)    : ORIGIN = CODE_NSC_VMA,      LENGTH = CODE_NSC_SIZE
+    code_2      (rx)    : ORIGIN = CODE_2_VMA,        LENGTH = CODE_2_SIZE
     data_1      (rwx)   : ORIGIN = DATA_1_VMA,        LENGTH = DATA_1_SIZE
     shared_mem0 (rwx)   : ORIGIN = SHARED_MEM0_LMA    LENGTH = SHARED_MEM0_SIZE
     shared_mem1 (rxw)   : ORIGIN = SHARED_MEM1_VMA    LENGTH = SHARED_MEM1_SIZE
@@ -125,6 +126,7 @@ SECTIONS
         KEEP(*(.vectors))
         *(.text*)
         KEEP(*(.text))      /* Program code */
+
         KEEP(*(.init))
         KEEP(*(.fini))
         /* .ctors */
@@ -164,6 +166,10 @@ SECTIONS
         LONG (__app_data1_lma__)
         LONG (__data_start__)
         LONG ((__data_end__ - __data_start__)/4)
+
+        LONG(__app_text2_lma__)
+        LONG(CODE_SRAM0_LMA)
+        LONG((__cy_sram0_code_vma_end__ - __cy_sram0_code_vma_start__)/4)
         __copy_table_end__ = .;
     } > code_1
 
@@ -221,6 +227,18 @@ SECTIONS
 
         __data_end__ = .;
     } > data_1
+
+    __app_text1_lma_count__ = ( . - __app_data1_vma__ + __app_data1_lma__);
+
+    __app_text2_lma__ = __app_text1_lma_count__;
+    .appText_2 __app_text2_vma__ : AT (__app_text2_lma__)
+    {
+        . = ALIGN(4);
+        __cy_sram0_code_vma_start__ = .;
+        KEEP(*(.cy_ramfunc*))
+        . = ALIGN(4);
+        __cy_sram0_code_vma_end__ = .;
+    } > code_2
 
     .ramVectors (NOLOAD):
     {

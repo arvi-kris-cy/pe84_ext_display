@@ -29,7 +29,7 @@
 
 #include "pse84_config.h"
 
-#if defined (CY_DOXYGEN) || defined (CY_DEVICE_PSE84) /* Declarations for EXPLORER */
+#if defined (CY_DOXYGEN) || defined (CY_DEVICE_PSE84) /* Declarations for PSE84 */
 
 #define CM33_FIXED_EXP_NR       (15u)
 #define VECTORTABLE_SIZE        (MXCM33_SYSTEM_INT_NR + CM33_FIXED_EXP_NR + 1u) /* +1 is for Stack pointer */

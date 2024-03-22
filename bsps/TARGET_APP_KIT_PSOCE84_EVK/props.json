@@ -1,6 +1,6 @@
 {
     "core": {
-        "version": "0.5.2.37558"
+        "version": "0.6.0.39022"
     },
     "opt": {
         "props": {
@@ -50,9 +50,9 @@
             "dependencies": {
                 "core-lib": "release-v1.4.2",
                 "core-make": "latest-v3.X",
-                "mtb-hal-cat1": "release-v2.5.3",
-                "mtb-pdl-cat1": "release-v3.5.3",
-                "recipe-make-cat1d": "release-v1.0.0"
+                "mtb-hal-cat1": "release-v2.5.5",
+                "mtb-pdl-cat1": "release-v3.5.4",
+                "recipe-make-cat1d": "release-v1.0.2"
             },
             "docs_dir": "docs",
             "flow_version": "2.0",

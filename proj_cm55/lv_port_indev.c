@@ -7,7 +7,7 @@
 * Related Document : See README.md
 *
 ********************************************************************************
-* Copyright 2023, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2023-2024, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -68,7 +68,8 @@ lv_indev_t * indev_touchpad;
 *******************************************************************************/
 static void touchpad_init(void)
 {
-    if (CY_RSLT_SUCCESS != ili2511_init())
+    cy_rslt_t result = ili2511_init();
+    if (CY_RSLT_SUCCESS != result)
     {
         CY_ASSERT(0);
     }
@@ -138,7 +139,7 @@ void lv_port_indev_init(void)
     static lv_indev_drv_t indev_drv;
 
     /* Initialize your touchpad if you have */
-    //touchpad_init();
+    touchpad_init();
 
     /* Register a touchpad input device */
     lv_indev_drv_init(&indev_drv);

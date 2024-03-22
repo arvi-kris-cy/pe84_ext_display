@@ -177,10 +177,18 @@
 ;   *(Veneer$$CMSE)                           ; uncomment for secure applications
     .ANY (+RO)
     .ANY (+XO)
+    EXCLUDE(*cy_smif.o, *cy_syslib.o, *cy_syslib_ext.o, *cy_smif_memslot.o, *cy_smif_sfdp.o, *cy_smif_hb_flash.o, *cyhal_qspi.o)
     }
 
     appText_2 __app_text2_vma__ CODE_2_SIZE {
       *(.cy_itcm)
+      cy_smif.o (+RO)
+      cy_syslib.o (+RO)
+      cy_syslib_ext.o (+RO)
+      cy_smif_memslot.o (+RO)
+      cy_smif_sfdp.o (+RO)
+      cy_smif_hb_flash.o (+RO)
+      cyhal_qspi.o (+RO)
     }
 
     appText_3 __app_text3_vma__ {
@@ -193,6 +201,15 @@
 
     data_1 __data1_vma__ DATA_1_SIZE  {  ; RW data
       .ANY (+RW +ZI)
+    }
+
+    ; Place variables in the section that should not be initialized during the
+    ; device startup.
+    data_1_noinit +0 UNINIT
+    {
+        * (.noinit)
+		* (.bss.noinit)
+        * (.bss.noinit.RESET_RAM)
     }
 
     data_2 __data2_vma__ DATA_2_SIZE {

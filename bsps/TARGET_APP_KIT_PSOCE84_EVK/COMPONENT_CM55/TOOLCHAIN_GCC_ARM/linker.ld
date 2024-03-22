@@ -19,15 +19,16 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2023, Cypress Semiconductor Corporation (an Infineon company)
+* Copyright (c) (2020-2022), Cypress Semiconductor Corporation (an Infineon company) or
+* an affiliate of Cypress Semiconductor Corporation.
 * SPDX-License-Identifier: Apache-2.0
-* 
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
-* 
+*
 *     http://www.apache.org/licenses/LICENSE-2.0
-* 
+*
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -178,15 +179,14 @@ SECTIONS
         KEEP(*(.vectors))
         . = ALIGN(4);
         __Vectors_End = .;
-
         . = ALIGN(4);
-        *(.text*)
         KEEP(*(.init))
         KEEP(*(.fini))
         /* .ctors */
         *crtbegin.o(.ctors)
         *crtbegin?.o(.ctors)
         *(EXCLUDE_FILE(*crtend?.o *crtend.o) .ctors)
+        *(EXCLUDE_FILE(*cy_smif.o *cy_syslib.o *cy_syslib_ext.o *cy_smif_memslot.o *cy_smif_sfdp.o *cy_smif_hb_flash.o *cyhal_qspi.o) .text*)
         *(SORT(.ctors.*))
         *(.ctors)
         /* .dtors */
@@ -265,6 +265,13 @@ SECTIONS
         . = ALIGN(4);
          __cy_itcm_vma_start__ = .;
         KEEP(*(.cy_itcm))
+        *cy_syslib.o(.text*)
+        *cy_syslib_ext.o(.text*)
+        *cy_smif.o(.text*)
+        *cy_smif_memslot.o(.text*)
+        *cy_smif_sfdp.o(.text*)
+        *cy_smif_hb_flash.o(.text*)
+        *cyhal_qspi.o(.text*)
         . = ALIGN(4);
         __cy_itcm_vma_end__ = .;
 
@@ -371,18 +378,6 @@ SECTIONS
     /* Below check is only valid when Stack and Heap are in same memory */
     /* ASSERT(__StackLimit >= __HeapLimit, "region RAM overflowed with stack") */
 
-    .heap (NOLOAD):
-    {
-        . = ALIGN(8);
-        __HeapBase = .;
-        __end__ = .;
-        end = __end__;
-        KEEP(*(.heap*))
-        . = ALIGN(8);
-        . = ORIGIN(data_2) + HEAP_SIZE;
-        __HeapLimit = .;
-    } > data_2
-    
     __data2_lma__ = __app_text1_lma_count__;
     .data_2 __data2_vma__ : AT(__data2_lma__)
     {
@@ -394,6 +389,18 @@ SECTIONS
 
     }  > data_2
     __app_text1_lma_count__ = .  + (__data2_vma__ - __data2_lma__);
+
+    .heap (NOLOAD):
+    {
+        . = ALIGN(8);
+        __HeapBase = .;
+        __end__ = .;
+        end = __end__;
+        KEEP(*(.heap*))
+        . = ALIGN(8);
+        . = ORIGIN(data_2) + LENGTH(data_2);
+        __HeapLimit = .;
+    } > data_2
 
     .reserved_socmem (NOLOAD):
     {

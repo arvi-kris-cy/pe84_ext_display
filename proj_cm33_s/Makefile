@@ -70,14 +70,8 @@ DEVICE_MODE=SECURE
 #Note:APPTYPE flash for secure project uses the linker for RRAM memory 
 APPTYPE=flash
 
-#Configure flash type as 
-#rram   - rram memory
-#eflash - external flash memory
-ifeq ($(APPTYPE),flash)
-FLASHTYPE?=rram
-endif
-
-#Set to true if image should be in MCUBoot format. This flag is used to enable the postbuild step
+#Set to true if image should be in MCUboot format. This flag is used to enable the postbuild step
+#For PSoC Edge, the Extended Boot always expects first user application in MCUboot image format
 MCUBOOT_IMAGE?=TRUE
 
 #Set to true if image should be SIGNED.
@@ -89,6 +83,8 @@ SECURED_BOOT?=FALSE
 # manually add source code to the build process from a location not searched
 # by default, or otherwise not found by the build system.
 SOURCES+=
+
+#Set to 'Enable' for logs in the Secure Project
 SEC_UART?=Enable
 
 # Like SOURCES, but for include directories. Value should be paths to
@@ -103,15 +99,6 @@ ifeq ($(SEC_UART),Enable)
 DEFINES+=ENABLE_HAL_RETARGET_IO
 endif
 
-
-#Use the app offsets/sizes for RRAM defined in partition_cat1d.h
-ifeq ($(FLASHTYPE),rram)
-DEFINES+=RRAM_BOOT
-else
-ifeq ($(FLASHTYPE),eflash)
-DEFINES+=FLASH_BOOT
-endif
-endif
 
 # Select softfp or hardfp floating point. Default is softfp.
 VFP_SELECT+=
@@ -154,45 +141,19 @@ endif
 #see https://docs.mcuboot.com/design.html for information on MCUboot image format
 ifeq ($(MCUBOOT_IMAGE),TRUE)
 
+COMPILED_HEX=$(MTB_TOOLS__OUTPUT_CONFIG_DIR)/$(APPNAME)
+
 #delete existing hex files, to avoid double header/signature
 #NOTE: prebuild.sh should not contain any CRLF line endings
-PREBUILD += && bash prebuild.sh $(MTB_TOOLS__OUTPUT_CONFIG_DIR) $(APPNAME)
- 
-ifeq ($(FLASHTYPE),rram)
-#Start offset of the secure application in RRAM
-#NOTE: this address should be same as defined in the "extended_boot_policy"
-APP_START?=0x3200F000   
-
-#add here if any additional argument for image-metadata/sign-image command (using edgeprotecttools)
-#NOTE: If the final image in MCUboot format is more than 0x100000, the "--slot-size"
-# argument must be used.For instance if final image size is 0x142305 bytes then the 
-#slot size can be 0x150000, ex: "--slot-size 0x150000"
-EPT_CMD_ARG?="--erased-val 0 --header-size 0x400"
-endif
-
-ifeq ($(FLASHTYPE),eflash)
-#Start offset of the secure application in flash
-#NOTE: this address should be same as defined in the "extended_boot_policy"
-APP_START?=0x70100000 
-
-#add here if any additional argument for image-metadata/sign-image command (using edgeprotecttools)
-#NOTE: If the final image in MCUboot format is more than 0x100000, the "--slot-size"
-# argument must be used.For instance if final image size is 0x142305 bytes then the 
-#slot size can be 0x150000, ex: "--slot-size 0x150000"
-EPT_CMD_ARG?="--erased-val 0xff --header-size 0x400" 
-endif
-
+PREBUILD += && bash ./scripts/prebuild.sh $(COMPILED_HEX) $(COMPILED_HEX)_unsigned
 
 ifeq ($(SECURED_BOOT),TRUE)
-#private key used to sign the image. 
-#TODO: Add OEM key generation instruction in Readme/UG.
-KEY_PATH?=""
+#private key used to sign the image. Refer 'AN237849 Getting started with PSoC™ Edge security'  
+#for information on key generation
+KEY_PATH?=./../keys/oem_private_key_0.pem
 endif
 
-#Add MCUboot metadata/ sign image
-#NOTE: postbuild.sh should not contain any CRLF line endings
-POSTBUILD= bash postbuild.sh $(MTB_TOOLS__OUTPUT_CONFIG_DIR) $(APPNAME) $(APP_START) \
-                                  $(EPT_CMD_ARG) $(SECURED_BOOT) $(KEY_PATH)
+include postbuild.mk
 
 endif
 

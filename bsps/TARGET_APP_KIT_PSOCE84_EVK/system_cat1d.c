@@ -125,7 +125,7 @@ void Cy_SysEnableU55(bool enable)
 * As an inllustration on when to call this function , refer to below
 * PDCM(Power Dependency Control Matrix)...
 *
-* ![](Explorer_PDCM_Default.png)
+* ![](PSE84_PDCM_Default.png)
 *
 * Where the table indicates the default PDCM dependencies.
 *

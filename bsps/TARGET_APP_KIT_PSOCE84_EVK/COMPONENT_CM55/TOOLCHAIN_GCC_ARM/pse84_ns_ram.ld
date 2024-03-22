@@ -43,7 +43,7 @@ GROUP(libgcc.a libc.a libm.a libnosys.a)
 
 ENTRY(Reset_Handler)
 
-INCLUDE pse84_common.ld
+INCLUDE pse84_common_ram.ld
 
 CODE_XIP0_OFFSET            = XIP0_CM55NS_APP_OFFSET;
 CODE_XIP0_VMA               = XIP0_NS_SAHB_START + CODE_XIP0_OFFSET;

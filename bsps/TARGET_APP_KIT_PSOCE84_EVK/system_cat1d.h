@@ -149,7 +149,6 @@ static inline uint32_t cy_CbusRemapAddr(const void *addr)
   else if (((uint32_t)addr >= CY_SOCMEM_RAM_BASE) &&
       ((uint32_t)addr < (CY_SOCMEM_RAM_BASE + CY_SOCMEM_RAM_SIZE)))
   {
-
     offset = (uint32_t)addr - CY_SOCMEM_RAM_BASE;
     remapAddr = CY_SOCMEM_RAM_CBUS_BASE + offset;
   }
@@ -159,6 +158,13 @@ static inline uint32_t cy_CbusRemapAddr(const void *addr)
   {
     offset = (uint32_t)addr - CY_XIP_PORT0_BASE;
     remapAddr =  CY_XIP_PORT0_CBUS_BASE + offset;
+  }
+  /* RRAM Address */
+  else if (((uint32_t)addr >= CY_RRAM_BASE) &&
+      ((uint32_t)addr < (CY_RRAM_BASE + CY_RRAM_SIZE)))
+  {
+    offset = (uint32_t)addr - CY_RRAM_BASE;
+    remapAddr = CY_RRAM_CBUS_BASE + offset;
   }/* no remapping, addr not in range */
   else
   {
@@ -187,11 +193,11 @@ static inline uint32_t cy_AhbRemapAddr(const void *addr)
   {
     offset = (uint32_t)addr - CY_SRAM_CBUS_BASE;
     remapAddr = CY_SRAM_BASE + offset;
-  } /* SOCMEM Address */
+  }
+  /* SOCMEM Address */
   else if (((uint32_t)addr >= CY_SOCMEM_RAM_CBUS_BASE) &&
       ((uint32_t)addr < (CY_SOCMEM_RAM_CBUS_BASE + CY_SOCMEM_RAM_SIZE)))
   {
-
     offset = (uint32_t)addr - CY_SOCMEM_RAM_CBUS_BASE;
     remapAddr = CY_SOCMEM_RAM_BASE + offset;
   }
@@ -201,6 +207,13 @@ static inline uint32_t cy_AhbRemapAddr(const void *addr)
   {
     offset = (uint32_t)addr - CY_XIP_PORT0_CBUS_BASE;
     remapAddr =  CY_XIP_PORT0_BASE + offset;
+  }
+  /* RRAM is mapped with offset */
+  else if (((uint32_t)addr >= CY_RRAM_CBUS_BASE) &&
+      ((uint32_t)addr < (CY_RRAM_CBUS_BASE + CY_RRAM_SIZE)))
+  {
+    offset = (uint32_t)addr - CY_RRAM_CBUS_BASE;
+    remapAddr =  CY_RRAM_BASE + offset;
   }/* no remapping, addr not in range */
   else
   {
@@ -254,15 +267,13 @@ static inline uint32_t cy_DTCMRemapAddr(const void *addr)
  *****************************************************************************/
 static inline void * cy_PlatformRemapAddr(const void *addr)
 {
-    #if defined(CORE_NAME_CM33_0)
-        return (void *)cy_AhbRemapAddr(addr);
-    #endif
-
-    #if defined(CORE_NAME_CM55_0)
-        return (void *)cy_DTCMRemapAddr(addr);
-    #endif
-
-    return (void *)addr;
+#if defined(CORE_NAME_CM33_0)
+  return (void *)cy_AhbRemapAddr(addr);
+#elif defined(CORE_NAME_CM55_0)
+  return (void *)cy_DTCMRemapAddr(addr);
+#else
+  return (void *)addr;
+#endif
 }
 /** \} group_system_config_cm33_functions_1d */
 

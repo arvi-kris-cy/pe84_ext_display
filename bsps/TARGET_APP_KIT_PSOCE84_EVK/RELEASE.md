@@ -15,12 +15,25 @@ The KIT_PSOCE84_EVK library includes the following:
 * API documentation
 
 ### What Changed?
+#### v0.6.0
+* ECO (17.2032 MHz) as source for DPLL LP (DPLL_LP0, DPLL_LP1) and IHO (50 MHz) for DPLL_HP
+* Reserved DPLL_LP0 as source for SMIF0 (CLK_HF3) with default 200 MHz frequency
+* Reserved DPLL_LP1 (65.536 MHz) as source for CLK_HF7 and divider set to 4 to generate CLK_HF7 = 16.384 MHz
+* Used DPLL_HP as source for CLK_HF0 (CM33 = 200 MHz), CLK_HF1 (CM55 = 400 MHz)
+* Enabled EXT_CLK (24 MHz) on P7_4 as input to CLK_HF12 (GFXSS)
+* ECO -> DPLL_LP0 (200 MHz) -> CLK_HF8 (50 MHz for USB)
+* Added aliases for TRACE, USB_HOST_EN, USB_DEVICE_DET, SD_CARD_DET, EXT_CLK, BL_PWM_DISP, DISP_RST, DISP_TP_INT, DISP_TP_RST pins
+* Updated bsp.mk file to support ARM compiler
+* Replaced CYW955513WLIPA with CYW55513IUBG as component for connectivity chip
+* Updated Deep Sleep Latency = 20 ms
+* Updated VDDD, VDDA, VDDIO0 and VDDIO1 values from 3.3 mV to 1.8 mV
+* Updated bsp dependencies: recipe-make-cat1d, mtb-pdl-cat1 and mtb-hal-cat1
 #### v0.5.2
 * System Idle Power Mode = System Deep Sleep
 * Removed prebuilt binaries for CM33 secure application
 * Arm compiler support
 #### v0.5.1
-* CLK_HF3 = 200MHz
+* CLK_HF3 = 200 MHz
 * System Idle Power Mode = CPU Sleep
 #### v0.5.0
 * Initial pre-production release

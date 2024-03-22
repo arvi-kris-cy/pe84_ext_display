@@ -7,7 +7,7 @@
 * Related Document : See README.md
 *
 ********************************************************************************
-* Copyright 2023, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2023-2024, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -43,7 +43,6 @@
 * Header Files
 *******************************************************************************/
 #include "WF101JTYAHMNB0.h"
-#include "cycfg_pins.h"
 #include "cyhal.h"
 
 
@@ -53,6 +52,10 @@
 #define PACKET_LENGTH                       (2U)
 /* Display controller command commit mask */
 #define DISPLAY_MASK                        (0x00000001U)
+
+#ifndef CYBSP_DISP_RST
+#define CYBSP_DISP_RST                      (P20_7)
+#endif
 
 
 /*******************************************************************************

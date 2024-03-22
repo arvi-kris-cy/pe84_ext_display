@@ -27,27 +27,27 @@ Defines:
 
 | Clock    | Source    | Output Frequency |
 |----------|-----------|------------------|
-| CLK_HF0  | CLK_PATH0 | 200 MHz          |
+| CLK_HF0  | CLK_PATH2 | 200 MHz          |
 | CLK_HF1  | CLK_PATH2 | 400 MHz          |
 | CLK_HF2  | CLK_PATH2 | 400 MHz          |
-| CLK_HF3  | CLK_PATH2 | 200 MHz          |
+| CLK_HF3  | CLK_PATH0 | 199 MHz          |
 | CLK_HF4  | CLK_PATH2 | 200 MHz          |
 | CLK_HF5  | CLK_PATH2 | 200 MHz          |
 | CLK_HF6  | CLK_PATH2 | 200 MHz          |
-| CLK_HF7  | CLK_PATH2 | 100 MHz          |
-| CLK_HF8  | CLK_PATH3 | 50 MHz           |
+| CLK_HF7  | CLK_PATH1 | 16 MHz           |
+| CLK_HF8  | CLK_PATH0 | 50 MHz           |
 | CLK_HF9  | CLK_PATH2 | 80 MHz           |
 | CLK_HF10 | CLK_PATH2 | 100 MHz          |
-| CLK_HF11 | CLK_PATH0 | 200 MHz          |
-| CLK_HF12 | CLK_PATH1 | 63 MHz           |
+| CLK_HF11 | CLK_PATH0 | 199 MHz          |
+| CLK_HF12 | CLK_PATH4 | 24 MHz           |
 | CLK_HF13 | CLK_PATH2 | 100 MHz          |
 
 ### Power Configuration
 
 * System Active Power Mode: HP
 * System Idle Power Mode: Deep Sleep
-* VDDA Voltage: 3300 mV
-* VDDD Voltage: 3300 mV
+* VDDA Voltage: 1800 mV
+* VDDD Voltage: 1800 mV
 
 See the [BSP Setttings][settings] for additional board specific configuration settings.
 

@@ -31,7 +31,7 @@ endif
 # Any additional components to apply when using this board.
 # Use a default CM0+ image (CM0P_SLEEP). This can be swapped for a different
 # pre-built image or removed if custom built project.
-BSP_COMPONENTS:=HCI-UART WIFI_INTERFACE_SDIO SM CYW955513WLIPA
+BSP_COMPONENTS:=HCI-UART WIFI_INTERFACE_SDIO SM CYW55513IUBG
 
 # Any additional defines to apply when using this board.
 BSP_DEFINES:=CY_USING_HAL
@@ -47,8 +47,12 @@ APPTYPE?=flash
 DEVICE_MODE?=NON_SECURE
 CORE?=CM33
 
+ifeq ($(TOOLCHAIN),GCC_ARM)
 # To pick up pse84_common.ld
 LDFLAGS += -Xlinker -L $(MTB_TOOLS__TARGET_DIR)/COMPONENT_CM33/TOOLCHAIN_$(TOOLCHAIN)
+else ifeq ($(TOOLCHAIN),ARM)
+LDFLAGS += --undefined=__scatterload_copy
+endif
 
 # Specify the path to the linker script to use
 ifeq ($(TOOLCHAIN),GCC_ARM)

@@ -2,15 +2,16 @@
 
 This code example demonstrates displaying a 2D graphics demo on a 10.1 inch 1024*600 TFT LCD (WF101JTYAHMNB0) using the Light and Versatile Graphics Library (LVGL) on PSoC&trade; Edge MCU. The 2D graphics displays a music player application, which is listed as one of the standard demo on the LVGL page. The LCD is connected via the MIPI Display Serial Interface (DSI) and the code is designed to run in a FreeRTOS environment.
 
-This code example has a three project structure - CM33 Secure, CM33 Non-Secure, and CM55 projects. Extended Boot launches the CM33 Secure project present in RRAM from a fixed location, which then configures the external QSPI flash in XIP mode and launches the CM33 Non-Secure application. Additionally, CM33 Non-Secure application enables CM55 CPU and launches the CM55 application in external flash. The CM55 application implements the logic for this code example.
+This code example has a three project structure - CM33 Secure, CM33 Non-Secure, and CM55 projects. All three projects are programmed to the external QSPI flash and executed in XIP mode. Extended Boot launches the CM33 Secure project from a fixed location in the external flash , which then configures the protection settings and launches the CM33 Non-Secure application. Additionally, CM33 Non-Secure application enables CM55 CPU and launches the CM55 application. The CM55 application implements the logic for this code example.
 
 ## Requirements
 
 - [ModusToolbox&trade; software](https://www.infineon.com/modustoolbox) v3.1 or later (tested with v3.1)
 - ModusToolbox&trade; PSoC&trade; E84 Early Access Pack. See [Software setup](#software-setup) for more details.
 - Edge Protect Tools v1.0.0. See [Software setup](#software-setup) for more details.
+- Extended Boot v1.1.0.1333 or later. See [Software setup](#software-setup) for more details.
 - Board support package (BSP) minimum required version for:
-   - KIT_PSOCE84_EVK: v0.5.2
+   - KIT_PSOCE84_EVK: v0.6.0
 - Programming language: C
 - Associated parts: All PSoC&trade; Edge E84 MCU parts
 
@@ -21,13 +22,15 @@ This code example has a three project structure - CM33 Secure, CM33 Non-Secure, 
 ## Supported kits (make variable 'TARGET')
 
 - **PSoC&trade; Edge E84 Evaluation Kit** (`KIT_PSOCE84_EVK`)
+   - Minimum required revision: Rev **
 
 ## Hardware setup
 
 This example uses the board's default configuration. See the kit user guide to ensure that the board is configured correctly.
 
 Please ensure below jumper and pin configuration on board.
-- Ensure Boot.1 (Boot SW) Pin (P17.6) should be in 'Low'/OFF position
+- Ensure BOOT SW should be in 'High'/ON position. 
+    > **Note:** For KIT_PSOCE84_EVK rev. **, BOOT SW pin is BOOT.1 (P17.6).
 - Ensure J20 and J21 should be in Tristate/Not-Connected (NC) position.
 
 10.1 inch 1024*600 TFT LCD [WF101JTYAHMNB0](https://www.winstar.com.tw/products/tft-lcd/ips-tft/ips-touch.html) is used as MIPI DSI display. Connect the LCD display connector to J38 and touch connector to J37 on PSoC&trade; EDGE E84 EVALUATION KIT.
@@ -66,6 +69,15 @@ You also need to put the following paths to the "Path" environment variable and 
 For installation on macOS and Linux operating systems, see section **4.1.2 Software Prerequisites** in _AN235935 – Getting started with PSoC&trade; Edge E84 MCU on ModusToolbox&trade; application note._
 
 NOTE: The default **`<install-path>`** of ModusToolbox™ in Windows operating system is C:/Users/`<USER>`
+
+</details>
+
+<details><summary><b>Extended Boot</b></summary>
+
+The code example expects the Extended Boot version 1.1.0.1333 or later. If your device has an older version, you will have to update it before running this code example. To check the version of Extended Boot, open modus-shell and execute the following command: <br> 
+> <code>edgeprotecttools -t pse84 device-info</code>
+
+To update/replace Extended Boot present in the PSoC&trade; Edge device, see section **2.2.2.6  Replacing the Extended Boot** in _AN237849 - Getting Started with PSoC&trade; Edge Security._
 
 </details>
 
@@ -112,10 +124,10 @@ The 'project-creator-cli' tool can be used to create applications from a CLI ter
 
 Use a CLI terminal to invoke the 'project-creator-cli' tool. On Windows, use the command-line 'modus-shell' program provided in the ModusToolbox&trade; installation instead of a standard Windows command-line application. This shell provides access to all ModusToolbox&trade; tools. You can access it by typing "modus-shell" in the search box in the Windows menu. In Linux and macOS, you can use any terminal application.
 
-The following example clones the "**Graphics LVGL Demo**" application with the desired name "LVGLDemo" configured for the *KIT_PSOCE84_EVK* BSP into the specified working directory, *C:/mtb_projects*:
+The following example clones the "**PSoC Edge Graphics LVGL Demo**" application with the desired name "MyLvglDemo" configured for the *KIT_PSOCE84_EVK* BSP into the specified working directory, *C:/mtb_projects*:
 
    ```
-   project-creator-cli --board-id KIT_PSOCE84_EVK --app-id mtb-example-psoc-edge-gfx-lvgl-demo --user-app-name LVGLDemo --target-dir "C:/mtb_projects"
+   project-creator-cli --board-id KIT_PSOCE84_EVK --app-id mtb-example-psoc-edge-gfx-lvgl-demo --user-app-name MyLvglDemo --target-dir "C:/mtb_projects"
    ```
 
 The 'project-creator-cli' tool has the following arguments:
@@ -258,7 +270,7 @@ proj_cm33_s | Project for CM33 Secure Processing Environment (SPE)
 proj_cm33_ns | Project for CM33 Non-secure Processing Environment (NSPE)
 proj_cm55 | CM55 Project
 
-In this code example, at device reset, the secured boot process starts from the ROM boot in the Secured Enclave as the Root of Trust. From the Secured Enclave, the boot flow is passed on to the System CPU Subsystem where the secure CM33 application is first started. After all necessary secure configurations, the flow is passed on to the non-secure CM33 application. Resource initialization for this example is performed by this CM33 non-secure project. It configures the system clocks, pins, clock to peripheral connections, and other platform resources. It then enables the CM55 core using the Cy_SysEnableCM55() function and put itself to CPU Sleep mode.
+In this code example, at device reset, the secured boot process starts from the ROM boot in the Secured Enclave as the Root of Trust. From the Secured Enclave, the boot flow is passed on to the System CPU Subsystem where the secure CM33 application is first started. After all necessary secure configurations, the flow is passed on to the non-secure CM33 application. Resource initialization for this example is performed by this CM33 non-secure project. It configures the system clocks, pins, clock to peripheral connections, and other platform resources. It then enables the CM55 core using the Cy_SysEnableCM55() function and allows Idle task to put CM33 in DeepSleep mode.
 
 The CM55 application drives the LCD and renders the image using PSoC&trade; Edge graphics subsystem. The graphics subsystem of PSoC&trade; Edge MCU houses an independent 2.5D graphics processing unit (GPU), a display controller (DC), and a MIPI DSI host controller with MIPI D-PHY physical layer interface.
 
@@ -274,9 +286,9 @@ In order to switch to other available LVGL demos, user need to enable the `LV_US
 
  Resource  |  Alias/object     |    Purpose
  :-------- | :-------------    | :------------
- UART (HAL)|cy_retarget_io_uart_obj| UART HAL object used by Retarget-IO for debug UART port
+ UART (HAL)|cy_retarget_io_uart_obj| UART HAL object used by retarget-io for the Debug UART port
  GFXSS (PDL)    | gfxss     | Graphics subsystem
- GPIO (PDL)| CYBSP_DISP_BL_PWM| Display backlight signal I/O
+ GPIO (PDL)| CYBSP_DISP_BACKLIGHT_PWM| Display backlight signal I/O
  GPIO (HAL)| CYBSP_DISP_RST| Display reset signal I/O
  GPIO (HAL)| CYBSP_DISP_TP_INT| Touch interrupt signal I/O
  GPIO (HAL)| CYBSP_DISP_TP_RST| Touch reset signal I/O
@@ -309,6 +321,7 @@ Document title: *CE239259* - *PSoC&trade; Edge MCU: Graphics LVGL Demo*
  Version | Description of change
  ------- | ---------------------
  1.0.0   | New code example
+ 1.1.0   | Updated the secure project to enable boot from external QSPI flash <br> Removed custom linker scripts and added custom System SRAM memory map in the common makefile <br> Updated README
 
 <br>
 
@@ -318,7 +331,7 @@ The Bluetooth&reg; word mark and logos are registered trademarks owned by Blueto
 
 ---------------------------------------------------------
 
-© Cypress Semiconductor Corporation, 2023. This document is the property of Cypress Semiconductor Corporation, an Infineon Technologies company, and its affiliates ("Cypress").  This document, including any software or firmware included or referenced in this document ("Software"), is owned by Cypress under the intellectual property laws and treaties of the United States and other countries worldwide.  Cypress reserves all rights under such laws and treaties and does not, except as specifically stated in this paragraph, grant any license under its patents, copyrights, trademarks, or other intellectual property rights.  If the Software is not accompanied by a license agreement and you do not otherwise have a written agreement with Cypress governing the use of the Software, then Cypress hereby grants you a personal, non-exclusive, nontransferable license (without the right to sublicense) (1) under its copyright rights in the Software (a) for Software provided in source code form, to modify and reproduce the Software solely for use with Cypress hardware products, only internally within your organization, and (b) to distribute the Software in binary code form externally to end users (either directly or indirectly through resellers and distributors), solely for use on Cypress hardware product units, and (2) under those claims of Cypress's patents that are infringed by the Software (as provided by Cypress, unmodified) to make, use, distribute, and import the Software solely for use with Cypress hardware products.  Any other use, reproduction, modification, translation, or compilation of the Software is prohibited.
+© Cypress Semiconductor Corporation, 2023-2024. This document is the property of Cypress Semiconductor Corporation, an Infineon Technologies company, and its affiliates ("Cypress").  This document, including any software or firmware included or referenced in this document ("Software"), is owned by Cypress under the intellectual property laws and treaties of the United States and other countries worldwide.  Cypress reserves all rights under such laws and treaties and does not, except as specifically stated in this paragraph, grant any license under its patents, copyrights, trademarks, or other intellectual property rights.  If the Software is not accompanied by a license agreement and you do not otherwise have a written agreement with Cypress governing the use of the Software, then Cypress hereby grants you a personal, non-exclusive, nontransferable license (without the right to sublicense) (1) under its copyright rights in the Software (a) for Software provided in source code form, to modify and reproduce the Software solely for use with Cypress hardware products, only internally within your organization, and (b) to distribute the Software in binary code form externally to end users (either directly or indirectly through resellers and distributors), solely for use on Cypress hardware product units, and (2) under those claims of Cypress's patents that are infringed by the Software (as provided by Cypress, unmodified) to make, use, distribute, and import the Software solely for use with Cypress hardware products.  Any other use, reproduction, modification, translation, or compilation of the Software is prohibited.
 <br>
 TO THE EXTENT PERMITTED BY APPLICABLE LAW, CYPRESS MAKES NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, WITH REGARD TO THIS DOCUMENT OR ANY SOFTWARE OR ACCOMPANYING HARDWARE, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  No computing device can be absolutely secure.  Therefore, despite security measures implemented in Cypress hardware or software products, Cypress shall have no liability arising out of any security breach, such as unauthorized access to or use of a Cypress product. CYPRESS DOES NOT REPRESENT, WARRANT, OR GUARANTEE THAT CYPRESS PRODUCTS, OR SYSTEMS CREATED USING CYPRESS PRODUCTS, WILL BE FREE FROM CORRUPTION, ATTACK, VIRUSES, INTERFERENCE, HACKING, DATA LOSS OR THEFT, OR OTHER SECURITY INTRUSION (collectively, "Security Breach").  Cypress disclaims any liability relating to any Security Breach, and you shall and hereby do release Cypress from any claim, damage, or other liability arising from any Security Breach.  In addition, the products described in these materials may contain design defects or errors known as errata which may cause the product to deviate from published specifications. To the extent permitted by applicable law, Cypress reserves the right to make changes to this document without further notice. Cypress does not assume any liability arising out of the application or use of any product or circuit described in this document. Any information provided in this document, including any sample design information or programming code, is provided only for reference purposes.  It is the responsibility of the user of this document to properly design, program, and test the functionality and safety of any application made of this information and any resulting product.  "High-Risk Device" means any device or system whose failure could cause personal injury, death, or property damage.  Examples of High-Risk Devices are weapons, nuclear installations, surgical implants, and other medical devices.  "Critical Component" means any component of a High-Risk Device whose failure to perform can be reasonably expected to cause, directly or indirectly, the failure of the High-Risk Device, or to affect its safety or effectiveness.  Cypress is not liable, in whole or in part, and you shall and hereby do release Cypress from any claim, damage, or other liability arising from any use of a Cypress product as a Critical Component in a High-Risk Device. You shall indemnify and hold Cypress, including its affiliates, and its directors, officers, employees, agents, distributors, and assigns harmless from and against all claims, costs, damages, and expenses, arising out of any claim, including claims for product liability, personal injury or death, or property damage arising from any use of a Cypress product as a Critical Component in a High-Risk Device. Cypress products are not intended or authorized for use as a Critical Component in any High-Risk Device except to the limited extent that (i) Cypress's published data sheet for the product explicitly states Cypress has qualified the product for use in a specific High-Risk Device, or (ii) Cypress has given you advance written authorization to use the product as a Critical Component in the specific High-Risk Device and you have signed a separate indemnification agreement.
 <br>

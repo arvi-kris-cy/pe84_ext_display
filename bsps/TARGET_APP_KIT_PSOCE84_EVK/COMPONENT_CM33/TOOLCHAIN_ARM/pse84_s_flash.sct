@@ -56,12 +56,12 @@
 #define CODE_RRAM_LMA               RRAM_NVM_MAIN_S_START + CODE_RRAM_OFFSET
 #define CODE_RRAM_SIZE              RRAM_CM33S_APP_SIZE
 
-#define DATA_SRAM0_OFFSET           SRAM0_CM33S_DATA_OFFSET_FLASH_BOOT
+#define DATA_SRAM0_OFFSET           SRAM0_CM33S_DATA_OFFSET
 #define DATA_SRAM0_VMA              SRAM0_S_SAHB_START + DATA_SRAM0_OFFSET
 #define DATA_SRAM0_LMA              SRAM0_S_SAHB_START + DATA_SRAM0_OFFSET
 #define DATA_SRAM0_SIZE             SRAM0_CM33S_DATA_SIZE
 
-#define SRAM0_SHARED_LMA            (SRAM0_S_SAHB_START + SRAM0_SHARED_OFFSET_FLASH_BOOT + SRAM0_SHARED_CM0_SIZE)
+#define SRAM0_SHARED_LMA            (SRAM0_S_SAHB_START + SRAM0_SHARED_OFFSET + SRAM0_SHARED_CM0_SIZE)
 #define SRAM0_SHARED_CM33_SIZE      SRAM0_SHARED_SIZE - SRAM0_SHARED_CM0_SIZE
 
 #define SRAM1_SHARED_LMA            SRAM1_S_SAHB_START + SRAM1_SIZE - SRAM1_SHARED_SIZE
@@ -73,9 +73,10 @@
 /* If main code needs to reside in externl flash then set it to CODE_XIP0_VMA        */
 /*-----------------------------------------------------------------------------------*/
 
-#define CODE_1_VMA                  CODE_RRAM_VMA
-#define CODE_1_LMA                  CODE_RRAM_LMA
-#define CODE_1_SIZE                 CODE_RRAM_SIZE
+#define CODE_1_VMA                  CODE_XIP0_VMA
+#define CODE_1_LMA                  CODE_XIP0_LMA
+#define CODE_1_SIZE                 CODE_XIP0_SIZE
+
 #define CODE_NSC_VMA                CODE_1_VMA + CODE_1_SIZE
 #define CODE_NSC_LMA                CODE_1_LMA + CODE_1_SIZE
 
@@ -83,9 +84,9 @@
 #define CODE_2_LMA                  CODE_SRAM0_LMA
 #define CODE_2_SIZE                 CODE_SRAM0_SIZE
 
-#define CODE_3_VMA                  CODE_XIP0_VMA
-#define CODE_3_LMA                  CODE_XIP0_LMA
-#define CODE_3_SIZE                 CODE_XIP0_SIZE
+#define CODE_3_VMA                  CODE_RRAM_VMA
+#define CODE_3_LMA                  CODE_RRAM_LMA
+#define CODE_3_SIZE                 CODE_RRAM_SIZE
 
 #define DATA_1_VMA                  DATA_SRAM0_VMA
 #define DATA_1_LMA                  DATA_SRAM0_LMA
@@ -140,6 +141,15 @@
 
     data_1 __data1_vma__ DATA_1_SIZE  {  ; RW data
       .ANY (+RW +ZI)
+    }
+
+    ; Place variables in the section that should not be initialized during the
+    ; device startup.
+    data_1_noinit +0 UNINIT
+    {
+        * (.noinit)
+		* (.bss.noinit)
+        * (.bss.noinit.RESET_RAM)
     }
 
 #if __HEAP_SIZE > 0

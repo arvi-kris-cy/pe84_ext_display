@@ -2,6 +2,22 @@ Revision history of CM33 Secure project (proj_cm33_s) in ModusToolbox&trade; PSo
 ----
 **Revision History**
 ----
+**Version 1.3.2:**
+- Added Edge Protect Bootloader Compatibility
+
+**Version 1.3.1:**
+- Added Basic Secure App compatibilty
+
+**Version 1.3.0:**
+- Add support for CM33 Secure Project execution from External flash
+- Removed support for CM33 Secure Project execution from RRAM
+- Removed postbuild.sh file, add postbuild.mk
+- Moved Security configurations from main.c to security_config.c
+
+**Version 1.2.1:**
+- Added ARMCompiler6.16 support
+- Added Semaphore initialization
+
 **Version 1.2.0:**
 - Added fix for FPU init and TCM access
 - Added revision history details (this file).

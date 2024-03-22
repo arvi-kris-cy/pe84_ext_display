@@ -64,6 +64,7 @@ extern uint32_t __StackLimit;
 ExecFuncPtrRw __ns_vector_table_rw[VECTORTABLE_SIZE]   __attribute__( ( section(".ram_vectors"))) __attribute__((aligned(VECTORTABLE_ALIGN)));
 #elif defined (__ICCARM__)
 extern unsigned int CSTACK$$Limit;                      /* for (default) One Region model */
+extern unsigned int CSTACK$$Base;
 extern void  __cmain();
 ExecFuncPtrRw __ns_vector_table_rw[VECTORTABLE_SIZE]   __attribute__( ( section(".intvec_ram"))) __attribute__((aligned(VECTORTABLE_ALIGN)));
 #else
@@ -98,7 +99,8 @@ __WEAK void HardFault_Handler(void)
         "ITE EQ\n"
         "MRSEQ R0, MSP\n"
         "MRSNE R0, PSP\n"
-        "B SysLib_FaultHandler\n"
+        "LDR R1, =SysLib_FaultHandler\n"
+        "BX R1\n"
     );
 }
 

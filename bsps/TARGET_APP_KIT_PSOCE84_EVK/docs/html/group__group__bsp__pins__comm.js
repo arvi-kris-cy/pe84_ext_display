@@ -36,5 +36,7 @@ var group__group__bsp__pins__comm =
     [ "CYBSP_BT_HOST_WAKE_IRQ_EVENT", "group__group__bsp__pins__comm.html#gab480375f418ada758be1e7f32e42b232", null ],
     [ "CYBSP_BT_DEVICE_WAKE", "group__group__bsp__pins__comm.html#ga157d988297cf9f6e736a6b2568393b57", null ],
     [ "CYBSP_BT_DEVICE_WAKE_GPIO_DM", "group__group__bsp__pins__comm.html#ga2e4aea75f92232352bef06af68df7fbe", null ],
-    [ "CYBSP_BT_DEVICE_WAKE_POLARITY", "group__group__bsp__pins__comm.html#ga819696334214ae0d912c381c7fb574f9", null ]
+    [ "CYBSP_BT_DEVICE_WAKE_POLARITY", "group__group__bsp__pins__comm.html#ga819696334214ae0d912c381c7fb574f9", null ],
+    [ "CYBSP_DEBUG_UART_RTS", "group__group__bsp__pins__comm.html#gac5ec921782c5ee070ee018636606ccc3", null ],
+    [ "CYBSP_DEBUG_UART_CTS", "group__group__bsp__pins__comm.html#ga8dea402871bf0d6105885b2a504add7c", null ]
 ];

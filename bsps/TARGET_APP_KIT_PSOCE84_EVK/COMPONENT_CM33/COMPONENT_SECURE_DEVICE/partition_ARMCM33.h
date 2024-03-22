@@ -458,7 +458,11 @@
 //   <o.30> Interrupt 62  <0=> Secure state <1=> Non-Secure state
 //   <o.31> Interrupt 63  <0=> Secure state <1=> Non-Secure state
 */
+#ifdef NO_RPC_CALL
 #define NVIC_INIT_ITNS1_VAL      0x9FFFFB00
+#else
+#define NVIC_INIT_ITNS1_VAL      0x9FFFBB00
+#endif
 
 /*
 //   </e>
@@ -504,7 +508,7 @@
 //   <o.30> Interrupt 94  <0=> Secure state <1=> Non-Secure state
 //   <o.31> Interrupt 95  <0=> Secure state <1=> Non-Secure state
 */
-#define NVIC_INIT_ITNS2_VAL      0xFFFFFE3F
+#define NVIC_INIT_ITNS2_VAL      0xFFFFFF3F
 
 /*
 //   </e>

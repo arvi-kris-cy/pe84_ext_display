@@ -67,7 +67,8 @@ extern uint32_t __StackLimit;
 typedef void(* ExecFuncPtrRw)(void);
 ExecFuncPtrRw __ns_vector_table_rw[VECTORTABLE_SIZE]   __attribute__( ( section(".ram_vectors"))) __attribute__((aligned(VECTORTABLE_ALIGN)));
 #elif defined (__ICCARM__)
-extern unsigned int CSTACK$$Limit;                      /* for (default) One Region model */
+extern unsigned int CSTACK$$Limit;
+extern unsigned int CSTACK$$Base;
 extern void  __cmain();
 ExecFuncPtrRw __ns_vector_table_rw[VECTORTABLE_SIZE]   __attribute__( ( section(".intvec_ram"))) __attribute__((aligned(VECTORTABLE_ALIGN)));
 #else
@@ -102,7 +103,8 @@ __WEAK void HardFault_Handler(void)
         "ITE EQ\n"
         "MRSEQ R0, MSP\n"
         "MRSNE R0, PSP\n"
-        "B SysLib_FaultHandler\n"
+        "LDR R1, =SysLib_FaultHandler\n"
+        "BX R1\n"
     );
 }
 
@@ -462,34 +464,16 @@ int __low_level_init(void)
 /**/
 #endif /* defined(__GNUC__) && !defined(__ARMCC_VERSION) */
 
+
 // Reset Handler
 __WEAK void Reset_Handler(void)
 {
-
-#if 0
-    /* invalidate the cache */
-    ICACHE0->CMD = ICACHE0->CMD | ICACHE_CMD_INV_Msk;
-    /*wait for invalidation complete */
-    while(ICACHE0->CMD & ICACHE_CMD_INV_Msk);
-#endif
 
     /* Enable EWIC block */
     uint32_t *ptr = (uint32_t *)CY_SYSINT_EWIC_CTL;
     *ptr |= (uint32_t)CY_SYSINT_EWIC_ENABLE_MSK;
 
-    /* Disable I cache */
-//    ICACHE0->CTL = ICACHE0->CTL & (~ICACHE_CTL_CA_EN_Msk);
-
-    /* Enable ECC */
-    //ICACHE0->CTL = ICACHE0->CTL | ICACHE_CTL_ECC_EN_Msk;
-
-    /* Enable I cache */
-  //  ICACHE0->CTL = ICACHE0->CTL | ICACHE_CTL_CA_EN_Msk;
-
     __disable_irq();
-
-    SCB_EnableICache();
-    SCB_EnableDCache();
 
     config_noncacheable_region();
 
@@ -505,7 +489,6 @@ __WEAK void Reset_Handler(void)
     SCB->CPACR |= SCB_NS_CPACR_CP10_CP11_ENABLE;
 #endif
 
-
     __set_MSPLIM((uint32_t)(&__STACK_LIMIT));
 
     SystemInit();
@@ -520,6 +503,10 @@ __WEAK void Reset_Handler(void)
     /* Call the constructors of all global objects */
     __iar_dynamic_initialization();
 #endif
+     __DMB();
+     __ISB();
+    SCB_EnableICache();
+    SCB_EnableDCache();
 
     Cy_RuntimeInit();
 }

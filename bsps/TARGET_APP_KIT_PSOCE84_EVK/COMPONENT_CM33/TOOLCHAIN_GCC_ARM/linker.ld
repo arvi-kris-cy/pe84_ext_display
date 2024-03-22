@@ -67,10 +67,10 @@ CODE_SOCMEMSRAM_OFFSET      = SOCMEMSRAM_CM33NS_APP_OFFSET;
 CODE_SOCMEMSRAM_VMA         = SOCMEMSRAM_NS_CBUS_START + CODE_SOCMEMSRAM_OFFSET;
 CODE_SOCMEMSRAM_LMA         = SOCMEMSRAM_NS_SAHB_START + CODE_SOCMEMSRAM_OFFSET;
 CODE_SOCMEMSRAM_SIZE        = SOCMEMSRAM_CM33NS_APP_SIZE;
-DATA_SRAM0_OFFSET           = SRAM0_CM33NS_DATA_OFFSET_FLASH_BOOT;
+DATA_SRAM0_OFFSET           = SRAM0_CM33NS_DATA_OFFSET;
 DATA_SRAM0_VMA              = SRAM0_NS_SAHB_START + DATA_SRAM0_OFFSET;
 DATA_SRAM0_LMA              = SRAM0_NS_SAHB_START + DATA_SRAM0_OFFSET;
-DATA_SRAM0_SIZE             = SRAM0_CM33NS_DATA_SIZE_FLASH_BOOT;
+DATA_SRAM0_SIZE             = SRAM0_CM33NS_DATA_SIZE;
 
 DATA_SRAM1_OFFSET           = SRAM1_CM33NS_DATA_OFFSET;
 DATA_SRAM1_VMA              = SRAM1_NS_SAHB_START + DATA_SRAM1_OFFSET;
@@ -84,9 +84,7 @@ DATA_SOCMEMSRAM_SIZE        = SOCMEMSRAM_CM33NS_DATA_SIZE;
 
 SOCMEMSRAM_SHARED_LMA       = (SOCMEMSRAM_NS_SAHB_START + SOCMEMSRAM_SHARED_OFFSET);
 
-SRAM0_SHARED_CM33_SIZE      = SRAM0_SHARED_SIZE - SRAM0_SHARED_CM0_SIZE;
-SRAM0_SHARED_LMA            = SRAM0_S_SAHB_START + SRAM0_SIZE - SRAM0_SHARED_CM33_SIZE;
-SRAM1_SHARED_LMA            = (SRAM1_NS_SAHB_START + SRAM1_SIZE - SRAM1_SHARED_SIZE) + SRAM1_SHARED_CM33S_SIZE;
+SRAM1_SHARED_LMA            = (SRAM1_NS_SAHB_START + SRAM1_SHARED_OFFSET) + SRAM1_SHARED_CM33S_SIZE;
 
 RAMVECTORS_ALIGNMENT        = CM33_RAMVECTORS_ALIGNMENT;
 /*-----------------------------------------------------------------------------------*/
@@ -135,6 +133,11 @@ SHARED_MEM1_LMA             = SOCMEMSRAM_SHARED_LMA;
 SHARED_MEM1_VMA             = SOCMEMSRAM_SHARED_LMA;
 SHARED_MEM1_SIZE            = SOCMEMSRAM_SHARED_SIZE;
 
+SOCMEMSRAM_GPUBUF_VMA       = (SOCMEMSRAM_NS_SAHB_START + SOCMEMSRAM_GPUBUF_OFFSET);
+GPU_BUF_VMA                 = SOCMEMSRAM_GPUBUF_VMA;
+GPU_BUF_LMA                 = SOCMEMSRAM_GPUBUF_VMA;
+GPU_BUF_SIZE                = SOCMEMSRAM_GPUBUF_SIZE;
+
 __app_text1_vma__           = CODE_1_VMA;
 
 __app_text2_vma__           = CODE_2_VMA;
@@ -163,6 +166,8 @@ MEMORY
     data_3        (rwx)    : ORIGIN = DATA_3_VMA,     LENGTH = DATA_3_SIZE
     shared_mem0   (rwx)    : ORIGIN = SHARED_MEM0_LMA LENGTH = SHARED_MEM0_SIZE /* shared_ram0 */
     shared_mem1   (rxw)    : ORIGIN = SHARED_MEM1_LMA LENGTH = SHARED_MEM1_SIZE /* shared_ram1 */
+    gpu_buf       (rxw)    : ORIGIN = GPU_BUF_LMA     LENGTH = GPU_BUF_SIZE /* gpu_buf  */
+
 }
 
 SECTIONS
@@ -172,8 +177,7 @@ SECTIONS
     .appText_1 __app_text1_vma__ : AT (__app_text1_lma__)
     {
         KEEP(*(.vectors))
-        *(.text*)
-        KEEP(*(.text))      /* Program code */
+        *(EXCLUDE_FILE(*cy_syslib.o *cy_syslib_ext.o *cy_smif.o *cy_smif_memslot.o *cy_smif_sfdp.o *cy_smif_hb_flash.o *cyhal_qspi.o)  .text*)
         KEEP(*(.init))
         KEEP(*(.fini))
         /* .ctors */
@@ -217,7 +221,6 @@ SECTIONS
         LONG (__data1_vma__)
         LONG ((__data_end__ - __data_start__)/4)
 
-/*
         LONG (__data2_lma__)
         LONG (__data2_vma__)
         LONG ((__cy_sram0_datans_vma_end__ - __cy_sram0_datans_vma_start__)/4)
@@ -225,7 +228,6 @@ SECTIONS
         LONG (__data3_lma__)
         LONG (__data3_vma__)
         LONG ((__cy_socmem_data_vma_end__ - __cy_socmem_data_vma_start__)/4)
-*/
 
         LONG(__app_text4_lma__)
         LONG(CODE_SRAM1_LMA)
@@ -268,6 +270,13 @@ SECTIONS
         KEEP(*(.cy_sram1_code))
         KEEP(*(.cy_ramfunc))
         KEEP(*(.text.cy_os_common))
+        *cy_syslib_ext.o(.text*)
+        *cy_syslib.o(.text*)
+        *cy_smif.o(.text*)
+        *cy_smif_memslot.o(.text*)
+        *cy_smif_sfdp.o(.text*)
+        *cy_smif_hb_flash.o(.text*)
+        *cyhal_qspi.o(.text*)
         . = ALIGN(4);
         __cy_sram1_code_vma_end__ = .;
     }  > code_4
@@ -409,4 +418,9 @@ SECTIONS
         . = ALIGN(4);
         __cy_socmem_data_vma_end__ = .;
     }  > data_3
+
+    .cy_gpu_buf (NOLOAD):
+    {
+      KEEP(*(.cy_gpu_buf))
+    }  > gpu_buf
 }

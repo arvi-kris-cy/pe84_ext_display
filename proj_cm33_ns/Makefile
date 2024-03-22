@@ -7,7 +7,7 @@
 #
 ################################################################################
 # \copyright
-# Copyright 2023, Cypress Semiconductor Corporation (an Infineon company)
+# Copyright 2023-2024, Cypress Semiconductor Corporation (an Infineon company)
 # SPDX-License-Identifier: Apache-2.0
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -53,67 +53,65 @@ VERBOSE=
 # ... then code in directories named COMPONENT_foo and COMPONENT_bar will be
 # added to the build
 #
-COMPONENTS+=FREERTOS RTOS_AWARE BMI270
+COMPONENTS+=FREERTOS RTOS_AWARE 
 
 # Like COMPONENTS, but disable optional code that was enabled by default.
-DISABLE_COMPONENTS=
-
-SEARCH+=../components
+DISABLE_COMPONENTS+=
 
 CORE=CM33
 CORE_NAME=CM33_0
 
-#Configure this application to be loaded into flash/ram
+# Configure this application to be loaded into flash/ram
 APPTYPE=flash
 
 # By default the build system automatically looks in the Makefile's directory
 # tree for source code and builds it. The SOURCES variable can be used to
 # manually add source code to the build process from a location not searched
 # by default, or otherwise not found by the build system.
-SOURCES=
+SOURCES+=
 
 # Like SOURCES, but for include directories. Value should be paths to
 # directories (without a leading -I).
-INCLUDES=../shared/include ../proj_cm33_s
+INCLUDES+=
 
 # Add additional defines to the build process (without a leading -D).
-DEFINES=CY_RETARGET_IO_CONVERT_LF_TO_CRLF RRAM_BOOT
+DEFINES+=CY_RETARGET_IO_CONVERT_LF_TO_CRLF
 
 # Select softfp or hardfp floating point. Default is softfp.
-VFP_SELECT=
+VFP_SELECT+=
 
 # Additional / custom C compiler flags.
 #
 # NOTE: Includes and defines should use the INCLUDES and DEFINES variable
 # above.
-CFLAGS=
+CFLAGS+=
 
 # Additional / custom C++ compiler flags.
 #
 # NOTE: Includes and defines should use the INCLUDES and DEFINES variable
 # above.
-CXXFLAGS=
+CXXFLAGS+=
 
 # Additional / custom assembler flags.
 #
 # NOTE: Includes and defines should use the INCLUDES and DEFINES variable
 # above.
-ASFLAGS=
+ASFLAGS+=
 
 # Additional / custom linker flags.
-LDFLAGS=
+LDFLAGS+=
 
 # Additional / custom libraries to link in to the application.
-LDLIBS=
+LDLIBS+=
 
 # Path to the linker script to use (if empty, use the default linker script).
-LINKER_SCRIPT=
+LINKER_SCRIPT+=
 
 # Custom pre-build commands to run.
-PREBUILD=
+PREBUILD+=
 
 # Custom post-build commands to run.
-POSTBUILD=
+POSTBUILD+=
 
 
 ################################################################################

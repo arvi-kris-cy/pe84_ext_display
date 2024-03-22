@@ -41,7 +41,7 @@ SEARCH_DIR(.)
 GROUP(-lgcc -lc -lnosys)
 ENTRY(S_Reset_Handler)
 
-INCLUDE pse84_common.ld
+INCLUDE pse84_common_ram.ld
 
 CODE_XIP0_OFFSET            = XIP0_CM33S_APP_OFFSET;
 CODE_XIP0_VMA               = XIP0_S_CBUS_START + CODE_XIP0_OFFSET;
